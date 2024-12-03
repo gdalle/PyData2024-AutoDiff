@@ -1,0 +1,246 @@
+---
+title: "Automatic Differentiation"
+subtitle: "A tale of two languages"
+author:
+  - name: Guillaume Dalle
+    orcid: 0000-0003-4866-1687
+    email: guillaume.dalle@epfl.ch
+    affiliation: 
+      - name: EPFL
+      - department: IdePHICS, INDY & SPOC laboratories
+date: "2024-12-03"
+bibliography: AD.bib
+format:
+  revealjs:
+    toc: true
+    toc-depth: 1
+    slide-number: true
+    overview: true
+    code-line-numbers: false
+    scrollable: true
+  beamer: default
+---
+
+# Introduction
+
+## Slides
+
+<https://gdalle.github.io/PyData2024-AutoDiff/>
+
+## Motivation
+
+::: {.callout-note}
+## What is a derivative?
+
+A linear approximation of a function around a point.
+:::
+
+::: {.callout-important}
+## Why do we care?
+
+Derivatives of complex programs are essential in optimization and machine learning.
+:::
+
+::: {.callout-tip}
+## What do we need to do?
+
+Not much: Automatic Differentiation (AD) computes derivatives for us!
+:::
+
+## Bibliography
+
+- @blondelElementsDifferentiableProgramming2024: the most recent book
+- @griewankEvaluatingDerivativesPrinciples2008: the bible of the field
+- @baydinAutomaticDifferentiationMachine2018, @margossianReviewAutomaticDifferentiation2019: concise surveys
+
+# Understanding AD
+
+## Derivatives: formal definition
+
+Derivative of $f$ at point $x$: linear map $\partial f(x)$ such that
+$$f(x + v) = f(x) + \partial f(x)[v] + o(\lVert v \rVert)$$
+
+In other words,
+
+$$\partial f(x)[v] = \lim_{\varepsilon \to 0} \frac{f(x + \varepsilon v) - f(x)}{\varepsilon}$$
+
+## Various flavors of differentiation
+
+- **Manual**: work out $\partial f$ by hand
+- **Numeric**: $\partial f(x)[v] \approx \frac{f(x+\varepsilon v) - f(x)}{\varepsilon}$
+- **Symbolic**: enter a formula for $f$, get a formula for $\partial f$
+- **Automatic**[^a]: code a program for $f$, get a program for $\partial f(x)$
+
+[^a]: or algorithmic
+
+## Two ingredients of AD
+
+Any derivative can be obtained from:
+
+1. Derivatives of **basic functions**: $\exp, \log, \sin, \cos, \dots$
+2. Composition with the **chain rule**: 
+
+$$\partial (f \circ g)(x) = \partial f(g(x)) \circ \partial g(x)$$
+
+or its adjoint[^b]
+
+$$\partial (f \circ g)^*(x) = \partial g(x)^* \circ \partial f(g(x))^*$$
+
+[^b]: the "transpose" of a linear map
+
+## What about Jacobian matrices?
+
+We could multiply matrices instead of composing linear maps:
+
+$$J_{f \circ g}(x) = J_f(g(x)) \cdot J_g(x)$$
+
+where the Jacobian matrix is
+
+$$J_f(x) = \left(\partial f_i / \partial x_j\right)_{i,j}$$
+
+- very wasteful in high dimension (think of $f = \mathrm{id}$)
+- ill-suited to arbitrary spaces
+
+## Matrix-vector products
+
+We don't need Jacobian matrices as long as we can compute their products with vectors:
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Jacobian-vector products**
+
+$$J_{f}(x) v = \partial f(x)[v]$$
+
+Propagate a perturbation $v$ from input to output
+
+:::
+
+::: {.column width="50%"}
+**Vector-Jacobian products**
+
+$$w^\top J_{f}(x) = \partial f(x)^*[w]$$
+
+Backpropagate a sensitivity $w$ from output to input
+
+:::
+
+::::
+
+## Forward mode
+
+Consider $f = f_L \circ \dots \circ f_1$ and its Jacobian $J = J_L \cdots J_1$.
+
+Jacobian-vector products decompose from layer $1$ to layer $L$:
+
+$$J_L(J_{L-1}(\dots \underbrace{J_2(\underbrace{J_1 v}_{v_1})}_{v_2}))$$
+
+Forward mode AD relies on the chain rule.
+
+## Reverse mode
+
+Consider $f = f_L \circ \dots \circ f_1$ and its Jacobian $J = J_L \cdots J_1$.
+
+Vector-Jacobian products decompose from layer $L$ to layer $1$:
+
+$$((\underbrace{(\underbrace{w^\top J_L}_{w_L}) J_{L-1}}_{w_{L-1}} \dots ) J_2 ) J_1$$
+
+Reverse mode AD relies on the adjoint chain rule.
+
+## Jacobian matrices are back
+
+Consider $f : \mathbb{R}^n \to \mathbb{R}^m$. How to recover the full Jacobian?
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Forward mode**
+
+Column by column:
+
+$$J = \begin{pmatrix} J e_1 & \dots & J e_n \end{pmatrix}$$
+
+where $e_i$ is a basis vector.
+
+:::
+
+::: {.column width="50%"}
+**Reverse mode**
+
+Row by row:
+
+$$J = \begin{pmatrix} e_1^\top J \\ \vdots \\ e_m^\top J \end{pmatrix}$$
+
+:::
+
+::::
+
+## Complexities
+
+Consider $f : \mathbb{R}^n \to \mathbb{R}^m$. How much does a Jacobian cost?
+
+::: {.callout-important}
+## Theorem
+
+Each JVP or VJP takes as much time and space as $O(1)$ calls to $f$.
+:::
+
+| sizes | jacobian | forward | reverse | best mode
+|---|---|---|---|---|
+| generic | jacobian | $O(n)$ | $O(m)$ | depends |
+| $n = 1$ | derivative | $O(1)$ | $O(m)$ | forward |
+| $m = 1$ | gradient | $O(n)$ | $O(1)$ | reverse |
+
+**Fast reverse mode gradients make deep learning possible.**
+
+# Using AD
+
+## Three types of AD users
+
+1. **Package users** want to differentiate through functions
+2. **Package developers** want to write differentiable functions
+3. **Backend developers** want to create new AD systems
+
+## Python vs. Julia: users {.smaller}
+
+![](img/python_julia_user.png)
+
+Image: courtesy of Adrian Hill
+
+## Python vs. Julia: developers {.smaller}
+
+![](img/python_julia_dev.png)
+
+Image: courtesy of Adrian Hill
+
+## Why so many packages?
+
+- Conflicting **paradigms**:
+  - numeric vs. symbolic vs. algorithmic
+  - operator overloading vs.  source-to-source
+- Cover varying **subsets of the language**
+- Historical reasons: developed by **different people**
+
+Full list available at <https://juliadiff.org/>.
+
+# Conclusion
+
+## Going further
+
+- [x] AD through a simple function
+- [ ] AD through an expectation [@mohamedMonteCarloGradient2020]
+- [ ] AD through a convex solver [@blondelEfficientModularImplicit2022]
+- [ ] AD through a combinatorial solver [@mandiDecisionFocusedLearningFoundations2024]
+
+## Take-home message
+
+Computing derivatives is **automatic** and efficient.
+
+Each AD system comes with **limitations**.
+
+Learn to recognize and overcome them.
+
+## References
+
+::: {#refs}
+:::
