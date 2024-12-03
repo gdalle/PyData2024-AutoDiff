@@ -18,7 +18,6 @@ format:
     overview: true
     code-line-numbers: false
     scrollable: true
-  beamer: default
 ---
 
 # Introduction
