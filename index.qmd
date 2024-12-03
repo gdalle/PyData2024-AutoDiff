@@ -1,23 +1,28 @@
 ---
-title: "Automatic Differentiation"
+title: "Automatic differentiation"
 subtitle: "A tale of two languages"
 author:
   - name: Guillaume Dalle
     orcid: 0000-0003-4866-1687
     email: guillaume.dalle@epfl.ch
     affiliation: 
-      - name: EPFL
+      - name: École polytechnique fédérale de Lausanne (Switzerland)
       - department: IdePHICS, INDY & SPOC laboratories
 date: "2024-12-03"
 bibliography: AD.bib
+engine: julia
 format:
   revealjs:
-    toc: true
-    toc-depth: 1
     slide-number: true
     overview: true
     code-line-numbers: false
     scrollable: true
+    width: 1280
+    height: 720
+execute:
+  echo: true
+  freeze: auto
+  error: true
 ---
 
 # Introduction
@@ -26,12 +31,14 @@ format:
 
 <https://gdalle.github.io/PyData2024-AutoDiff/>
 
+![](img/qr.png)
+
 ## Motivation
 
 ::: {.callout-note}
-## What is a derivative?
+## What is differentiation?
 
-A linear approximation of a function around a point.
+Finding a linear approximation of a function around a point.
 :::
 
 ::: {.callout-important}
@@ -43,7 +50,7 @@ Derivatives of complex programs are essential in optimization and machine learni
 ::: {.callout-tip}
 ## What do we need to do?
 
-Not much: Automatic Differentiation (AD) computes derivatives for us!
+Not much: automatic differentiation (AD) computes derivatives for us!
 :::
 
 ## Bibliography
@@ -52,188 +59,385 @@ Not much: Automatic Differentiation (AD) computes derivatives for us!
 - @griewankEvaluatingDerivativesPrinciples2008: the bible of the field
 - @baydinAutomaticDifferentiationMachine2018, @margossianReviewAutomaticDifferentiation2019: concise surveys
 
-# Understanding AD
+# Flavors of differentiation
 
 ## Derivatives: formal definition
 
-Derivative of $f$ at point $x$: linear map $\partial f(x)$ such that
-$$f(x + v) = f(x) + \partial f(x)[v] + o(\lVert v \rVert)$$
+Derivative of $f: \mathbb{R}^n \to \mathbb{R}^m$ at point $x$: linear map $\partial f(x)$ such that
+$$f(x + \varepsilon) = f(x) + \partial f(x)[\varepsilon] + o(\varepsilon)$$
 
-In other words,
+- For $n = 1, m = 1$, derivative represented by a number $f'(x)$
+- For $n > 1, m = 1$, derivative represented by a gradient vector $\nabla f(x)$ 
+- For $n > 1, m > 1$, derivative represented by a Jacobian matrix 
 
-$$\partial f(x)[v] = \lim_{\varepsilon \to 0} \frac{f(x + \varepsilon v) - f(x)}{\varepsilon}$$
+$$\partial f(x) = \left(\frac{\partial f_i}{\partial x_j} (x)\right)_{1 \leq i \leq n, 1 \leq j \leq m}$$
 
-## Various flavors of differentiation
+## Manual differentiation
 
-- **Manual**: work out $\partial f$ by hand
-- **Numeric**: $\partial f(x)[v] \approx \frac{f(x+\varepsilon v) - f(x)}{\varepsilon}$
-- **Symbolic**: enter a formula for $f$, get a formula for $\partial f$
-- **Automatic**[^a]: code a program for $f$, get a program for $\partial f(x)$
-
-[^a]: or algorithmic
-
-## Two ingredients of AD
-
-Any derivative can be obtained from:
-
-1. Derivatives of **basic functions**: $\exp, \log, \sin, \cos, \dots$
-2. Composition with the **chain rule**: 
-
-$$\partial (f \circ g)(x) = \partial f(g(x)) \circ \partial g(x)$$
-
-or its adjoint[^b]
-
-$$\partial (f \circ g)^*(x) = \partial g(x)^* \circ \partial f(g(x))^*$$
-
-[^b]: the "transpose" of a linear map
-
-## What about Jacobian matrices?
-
-We could multiply matrices instead of composing linear maps:
-
-$$J_{f \circ g}(x) = J_f(g(x)) \cdot J_g(x)$$
-
-where the Jacobian matrix is
-
-$$J_f(x) = \left(\partial f_i / \partial x_j\right)_{i,j}$$
-
-- very wasteful in high dimension (think of $f = \mathrm{id}$)
-- ill-suited to arbitrary spaces
-
-## Matrix-vector products
-
-We don't need Jacobian matrices as long as we can compute their products with vectors:
+Write down formulas like you're in high school.
 
 :::: {.columns}
 
 ::: {.column width="50%"}
-**Jacobian-vector products**
 
-$$J_{f}(x) v = \partial f(x)[v]$$
+```{julia}
+#| output: false
+f(x) = √x  # computes sqrt
 
-Propagate a perturbation $v$ from input to output
+function g(x)  # computes approximate sqrt
+  y = x
+  for i in 1:3
+    y = 0.5 * (y + x/y)
+  end
+  return y
+end
+```
 
 :::
 
 ::: {.column width="50%"}
-**Vector-Jacobian products**
+```{julia}
+x = 2.0
+f(x), g(x)
+```
 
-$$w^\top J_{f}(x) = \partial f(x)^*[w]$$
+```{julia}
+#| output: false
 
-Backpropagate a sensitivity $w$ from output to input
+df(x) = 1 / 2√x
+
+dg(x) = error("I'm too lazy")
+```
+:::
+
+::::
+
+::: {.callout-warning}
+## Drawback
+
+Labor-intensive, error-prone.
+:::
+
+## Symbolic differentiation
+
+Ask Mathematica / Wolfram Alpha to work out formulas for you.
+
+```{julia}
+#| output: false
+using Symbolics, Latexify; xvar = Symbolics.variable(:x)
+```
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+```{julia}
+latexify(Symbolics.derivative(f(xvar), xvar))
+```
+
+:::
+
+::: {.column width="50%"}
+
+```{julia}
+latexify(Symbolics.derivative(g(xvar), xvar))
+```
 
 :::
 
 ::::
 
-## Forward mode
+::: {.callout-warning}
+## Drawback
 
-Consider $f = f_L \circ \dots \circ f_1$ and its Jacobian $J = J_L \cdots J_1$.
+Does not scale to more complex functions.
+:::
 
-Jacobian-vector products decompose from layer $1$ to layer $L$:
+## Numeric differentiation
 
-$$J_L(J_{L-1}(\dots \underbrace{J_2(\underbrace{J_1 v}_{v_1})}_{v_2}))$$
+Rely on finite differences with a small perturbation.
 
-Forward mode AD relies on the chain rule.
+$$\partial f(x)[\varepsilon] \approx \frac{f(x + \varepsilon) - f(x)}{\varepsilon}$$
 
-## Reverse mode
+:::: {.columns}
 
-Consider $f = f_L \circ \dots \circ f_1$ and its Jacobian $J = J_L \cdots J_1$.
+::: {.column width="33%"}
 
-Vector-Jacobian products decompose from layer $L$ to layer $1$:
+```{julia}
+ε1 = 1e-1  # too large
+(f(x + ε1) - f(x)) / ε1
+```
 
-$$((\underbrace{(\underbrace{w^\top J_L}_{w_L}) J_{L-1}}_{w_{L-1}} \dots ) J_2 ) J_1$$
+:::
 
-Reverse mode AD relies on the adjoint chain rule.
+::: {.column width="33%"}
 
-## Jacobian matrices are back
+```{julia}
+ε2 = 1e-5  # just right
+(f(x + ε2) - f(x)) / ε2
+```
 
-Consider $f : \mathbb{R}^n \to \mathbb{R}^m$. How to recover the full Jacobian?
+:::
+
+::: {.column width="33%"}
+
+```{julia}
+ε3 = 1e-15  # too small
+(f(x + ε3) - f(x)) / ε3
+```
+
+:::
+
+::::
+
+::: {.callout-warning}
+## Drawback
+
+Truncation or floating point errors depending on $\varepsilon$.
+:::
+
+## Automatic (or algorithmic) differentiation
+
+Reinterpret the program computing $f$ to obtain $\partial f(x)$ instead.
+
+:::: {.columns}
+
+::: {.column width="65%"}
+
+```{julia}
+struct Dual
+  val::Float64
+  der::Float64
+end
+
+Base.:*(a, x::Dual) = Dual(a*x.val, a*x.der)
+Base.:+(x::Dual, y::Dual) = Dual(x.val+y.val, x.der+y.der)
+Base.:/(x::Dual, y::Dual) = Dual(x.val/y.val, (x.der*y.val-y.der*x.val)/y.val^2)
+Base.sqrt(x::Dual) = Dual(√x.val, x.der/2√x.val)
+```
+
+:::
+
+::: {.column width="35%"}
+
+```{julia}
+f(Dual(2.0, 1.0))
+```
+
+```{julia}
+g(Dual(2.0, 1.0))
+```
+
+:::
+
+::::
+
+::: {.callout-warning}
+## Drawback
+
+Hard to reinterpret arbitrary code efficiently.
+:::
+
+# AD under the hood
+
+## How it works
+
+1. Hardcoded derivatives of basic functions: $+, \times, \exp, \log, \sin, \cos$
+2. Composition with the chain rule:
+
+$$ f = g \circ h \qquad \implies \qquad \partial f(x) = \partial g(h(x)) \circ \partial h(x)$$ 
+
+Main implementation paradigms:
 
 :::: {.columns}
 
 ::: {.column width="50%"}
+
+
+::: {.callout-tip}
+## Operator overloading
+
+Define new types augmenting runtime operations.
+:::
+
+:::
+
+::: {.column width="50%"}
+
+::: {.callout-tip}
+## Source transformation
+
+Preprocess the source code at compile time.
+:::
+
+:::
+
+::::
+
+## Two different modes
+
+Consider $f : x \in \mathbb{R}^n \longmapsto y \in \mathbb{R}^m$. Time $T(f)$ = one evaluation of $f$.
+
+:::: {.columns}
+
+::: {.column width="45%"}
+
 **Forward mode**
 
-Column by column:
+At cost $\propto T(f)$, get all $m$ partial derivatives wrt input $x_i$.
 
-$$J = \begin{pmatrix} J e_1 & \dots & J e_n \end{pmatrix}$$
-
-where $e_i$ is a basis vector.
+Propagate an input perturbation onto the outputs.
 
 :::
 
-::: {.column width="50%"}
+::: {.column width="10%"}
+:::
+
+::: {.column width="45%"}
+
 **Reverse mode**
 
-Row by row:
+At cost $\propto T(f)$, get all $n$ partial derivatives for output $y_j$.
 
-$$J = \begin{pmatrix} e_1^\top J \\ \vdots \\ e_m^\top J \end{pmatrix}$$
+Backpropagate an output sensitivity onto the inputs.
 
 :::
 
 ::::
 
-## Complexities
-
-Consider $f : \mathbb{R}^n \to \mathbb{R}^m$. How much does a Jacobian cost?
-
 ::: {.callout-important}
-## Theorem
+## Why is deep learning possible?
 
-Each JVP or VJP takes as much time and space as $O(1)$ calls to $f$.
+Because gradients in reverse mode are fast.
 :::
 
-| sizes | jacobian | forward | reverse | best mode
-|---|---|---|---|---|
-| generic | jacobian | $O(n)$ | $O(m)$ | depends |
-| $n = 1$ | derivative | $O(1)$ | $O(m)$ | forward |
-| $m = 1$ | gradient | $O(n)$ | $O(1)$ | reverse |
+# AD in Python and Julia
 
-**Fast reverse mode gradients make deep learning possible.**
+## A flurry of options
 
-# Using AD
+In Python, three main AD _frameworks_:
 
-## Three types of AD users
+:::: {.columns}
 
-1. **Package users** want to differentiate through functions
-2. **Package developers** want to write differentiable functions
-3. **Backend developers** want to create new AD systems
+::: {.column width="33%"}
+- [`TensorFlow`](https://www.tensorflow.org/)
+:::
 
-## Python vs. Julia: users {.smaller}
+::: {.column width="33%"}
+- [`PyTorch`](https://pytorch.org/)
+:::
+
+::: {.column width="33%"}
+- [`JAX`](https://jax.readthedocs.io/en/latest/index.html)
+:::
+
+::::
+
+In Julia, a dozen or so AD _backends_:
+
+:::: {.columns}
+
+::: {.column width="33%"}
+- [Enzyme.jl](https://github.com/EnzymeAD/Enzyme.jl)
+- [FastDifferentiation.jl](https://github.com/brianguenter/FastDifferentiation.jl)
+- [FiniteDiff.jl](https://github.com/JuliaDiff/FiniteDiff.jl)
+:::
+
+::: {.column width="33%"}
+- [FiniteDifferences.jl](https://github.com/JuliaDiff/FiniteDifferences.jl)
+- [ForwardDiff.jl](https://github.com/JuliaDiff/ForwardDiff.jl)
+- [Mooncake.jl](https://github.com/compintell/Mooncake.jl)
+- [ReverseDiff.jl](https://github.com/JuliaDiff/ReverseDiff.jl)
+:::
+
+::: {.column width="33%"}
+- [Symbolics.jl](https://github.com/JuliaSymbolics/Symbolics.jl)
+- [Tracker.jl](https://github.com/FluxML/Tracker.jl)
+- [Zygote.jl](https://github.com/FluxML/Zygote.jl)
+:::
+
+
+::::
+
+Each backend has its use cases, especially for scientific ML.
+
+## Python & Julia: users {.smaller}
 
 ![](img/python_julia_user.png)
 
 Image: courtesy of Adrian Hill
 
-## Python vs. Julia: developers {.smaller}
+## Python & Julia: developers {.smaller}
 
 ![](img/python_julia_dev.png)
 
 Image: courtesy of Adrian Hill
 
-## Why so many packages?
+## Why the difference?
 
-- Conflicting **paradigms**:
-  - numeric vs. symbolic vs. algorithmic
-  - operator overloading vs.  source-to-source
-- Cover varying **subsets of the language**
-- Historical reasons: developed by **different people**
+Because of the relation between tensor operations and AD:
 
-Full list available at <https://juliadiff.org/>.
+- In Python, tensors are tied to an AD framework
+- In Julia, tensors are part of the core language
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+**The good**
+
+No need to write 3 versions of every scientific library.
+
+:::
+
+::: {.column width="50%"}
+
+**The bad**
+
+Julia AD backends support different subsets of the language.
+
+:::
+
+::::
+
+## The importance of interfaces
+
+Allow easy experimentation with different AD frameworks.
+
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+**Python**
+
+[Keras](https://keras.io/) 3.0 supports Tensorflow, PyTorch and JAX.
+
+:::
+
+::: {.column width="50%"}
+
+**Julia**
+
+[DifferentiationInterface.jl](https://github.com/JuliaDiff/DifferentiationInterface.jl) offers a common syntax.
+
+:::
+
+::::
 
 # Conclusion
 
 ## Going further
 
 - [x] AD through a simple function
-- [ ] AD through an expectation [@mohamedMonteCarloGradient2020]
-- [ ] AD through a convex solver [@blondelEfficientModularImplicit2022]
-- [ ] AD through a combinatorial solver [@mandiDecisionFocusedLearningFoundations2024]
+- [ ] AD through a differential equation [@sapienzaDifferentiableProgrammingDifferential2024]
+- [ ] AD through a stochastic expectation [@mohamedMonteCarloGradient2020]
+- [ ] AD through a convex optimizer [@blondelEfficientModularImplicit2022]
+- [ ] AD through a discrete optimizer [@mandiDecisionFocusedLearningFoundations2024]
 
 ## Take-home message
 
-Computing derivatives is **automatic** and efficient.
+Computing derivatives is **automatic** and **efficient**.
 
 Each AD system comes with **limitations**.
 
