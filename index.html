@@ -11,7 +11,7 @@
 
   <meta name="author" content="Guillaume Dalle">
   <meta name="dcterms.date" content="2024-12-03">
-  <title>Automatic Differentiation</title>
+  <title>Automatic differentiation</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -29,6 +29,71 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     /* CSS for citations */
     div.csl-bib-body { }
     div.csl-entry {
@@ -149,7 +214,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Automatic Differentiation</h1>
+  <h1 class="title">Automatic differentiation</h1>
   <p class="subtitle">A tale of two languages</p>
 
 <div class="quarto-title-authors">
@@ -161,7 +226,7 @@ Guillaume Dalle <a href="https://orcid.org/0000-0003-4866-1687" class="quarto-ti
 <a href="mailto:guillaume.dalle@epfl.ch">guillaume.dalle@epfl.ch</a>
 </div>
         <p class="quarto-title-affiliation">
-            EPFL
+            École polytechnique fédérale de Lausanne (Switzerland)
           </p>
         <p class="quarto-title-affiliation">
             
@@ -170,16 +235,6 @@ Guillaume Dalle <a href="https://orcid.org/0000-0003-4866-1687" class="quarto-ti
 </div>
 
   <p class="date">2024-12-03</p>
-</section><section id="TOC">
-<nav role="doc-toc"> 
-<h2 id="toc-title">Table of contents</h2>
-<ul>
-<li><a href="#/introduction" id="/toc-introduction">Introduction</a></li>
-<li><a href="#/understanding-ad" id="/toc-understanding-ad">Understanding AD</a></li>
-<li><a href="#/using-ad" id="/toc-using-ad">Using AD</a></li>
-<li><a href="#/conclusion" id="/toc-conclusion">Conclusion</a></li>
-</ul>
-</nav>
 </section>
 <section>
 <section id="introduction" class="title-slide slide level1 center">
@@ -189,7 +244,8 @@ Guillaume Dalle <a href="https://orcid.org/0000-0003-4866-1687" class="quarto-ti
 <section id="slides" class="slide level2">
 <h2>Slides</h2>
 <p><a href="https://gdalle.github.io/PyData2024-AutoDiff/" class="uri">https://gdalle.github.io/PyData2024-AutoDiff/</a></p>
-</section>
+
+<img data-src="img/qr.png" class="r-stretch"></section>
 <section id="motivation" class="slide level2">
 <h2>Motivation</h2>
 <div class="callout callout-note callout-titled callout-style-default">
@@ -198,10 +254,10 @@ Guillaume Dalle <a href="https://orcid.org/0000-0003-4866-1687" class="quarto-ti
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>What is a derivative?</strong></p>
+<p><strong>What is differentiation?</strong></p>
 </div>
 <div class="callout-content">
-<p>A linear approximation of a function around a point.</p>
+<p>Finding a linear approximation of a function around a point.</p>
 </div>
 </div>
 </div>
@@ -227,7 +283,7 @@ Guillaume Dalle <a href="https://orcid.org/0000-0003-4866-1687" class="quarto-ti
 <p><strong>What do we need to do?</strong></p>
 </div>
 <div class="callout-content">
-<p>Not much: Automatic Differentiation (AD) computes derivatives for us!</p>
+<p>Not much: automatic differentiation (AD) computes derivatives for us!</p>
 </div>
 </div>
 </div>
@@ -241,177 +297,354 @@ Guillaume Dalle <a href="https://orcid.org/0000-0003-4866-1687" class="quarto-ti
 </ul>
 </section></section>
 <section>
-<section id="understanding-ad" class="title-slide slide level1 center">
-<h1>Understanding AD</h1>
+<section id="flavors-of-differentiation" class="title-slide slide level1 center">
+<h1>Flavors of differentiation</h1>
 
 </section>
 <section id="derivatives-formal-definition" class="slide level2">
 <h2>Derivatives: formal definition</h2>
-<p>Derivative of <span class="math inline">\(f\)</span> at point <span class="math inline">\(x\)</span>: linear map <span class="math inline">\(\partial f(x)\)</span> such that <span class="math display">\[f(x + v) = f(x) + \partial f(x)[v] + o(\lVert v \rVert)\]</span></p>
-<p>In other words,</p>
-<p><span class="math display">\[\partial f(x)[v] = \lim_{\varepsilon \to 0} \frac{f(x + \varepsilon v) - f(x)}{\varepsilon}\]</span></p>
-</section>
-<section id="various-flavors-of-differentiation" class="slide level2 scrollable">
-<h2>Various flavors of differentiation</h2>
+<p>Derivative of <span class="math inline">\(f: \mathbb{R}^n \to \mathbb{R}^m\)</span> at point <span class="math inline">\(x\)</span>: linear map <span class="math inline">\(\partial f(x)\)</span> such that <span class="math display">\[f(x + \varepsilon) = f(x) + \partial f(x)[\varepsilon] + o(\varepsilon)\]</span></p>
 <ul>
-<li><strong>Manual</strong>: work out <span class="math inline">\(\partial f\)</span> by hand</li>
-<li><strong>Numeric</strong>: <span class="math inline">\(\partial f(x)[v] \approx \frac{f(x+\varepsilon v) - f(x)}{\varepsilon}\)</span></li>
-<li><strong>Symbolic</strong>: enter a formula for <span class="math inline">\(f\)</span>, get a formula for <span class="math inline">\(\partial f\)</span></li>
-<li><strong>Automatic</strong><sup>1</sup>: code a program for <span class="math inline">\(f\)</span>, get a program for <span class="math inline">\(\partial f(x)\)</span></li>
+<li>For <span class="math inline">\(n = 1, m = 1\)</span>, derivative represented by a number <span class="math inline">\(f'(x)\)</span></li>
+<li>For <span class="math inline">\(n &gt; 1, m = 1\)</span>, derivative represented by a gradient vector <span class="math inline">\(\nabla f(x)\)</span></li>
+<li>For <span class="math inline">\(n &gt; 1, m &gt; 1\)</span>, derivative represented by a Jacobian matrix</li>
 </ul>
-<aside><ol class="aside-footnotes"><li id="fn1"><p>or algorithmic</p></li></ol></aside></section>
-<section id="two-ingredients-of-ad" class="slide level2 scrollable">
-<h2>Two ingredients of AD</h2>
-<p>Any derivative can be obtained from:</p>
+<p><span class="math display">\[\partial f(x) = \left(\frac{\partial f_i}{\partial x_j} (x)\right)_{1 \leq i \leq n, 1 \leq j \leq m}\]</span></p>
+</section>
+<section id="manual-differentiation" class="slide level2">
+<h2>Manual differentiation</h2>
+<p>Write down formulas like you’re in high school.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div id="2" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>(x) <span class="op">=</span> √x  <span class="co"># computes sqrt</span></span>
+<span id="cb1-2"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">g</span>(x)  <span class="co"># computes approximate sqrt</span></span>
+<span id="cb1-4"><a aria-hidden="true" tabindex="-1"></a>  y <span class="op">=</span> x</span>
+<span id="cb1-5"><a aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span></span>
+<span id="cb1-6"><a aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> (y <span class="op">+</span> x<span class="op">/</span>y)</span>
+<span id="cb1-7"><a aria-hidden="true" tabindex="-1"></a>  <span class="cf">end</span></span>
+<span id="cb1-8"><a aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> y</span>
+<span id="cb1-9"><a aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:50%;">
+<div id="4" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fl">2.0</span></span>
+<span id="cb2-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>(x), <span class="fu">g</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>(1.4142135623730951, 1.4142156862745097)</code></pre>
+</div>
+</div>
+<div id="6" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">df</span>(x) <span class="op">=</span> <span class="fl">1</span> <span class="op">/</span> <span class="fl">2</span>√x</span>
+<span id="cb4-2"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">dg</span>(x) <span class="op">=</span> <span class="fu">error</span>(<span class="st">"I'm too lazy"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div></div>
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Drawback</strong></p>
+</div>
+<div class="callout-content">
+<p>Labor-intensive, error-prone.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="symbolic-differentiation" class="slide level2">
+<h2>Symbolic differentiation</h2>
+<p>Ask Mathematica / Wolfram Alpha to work out formulas for you.</p>
+<div id="8" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Symbolics</span>, <span class="bu">Latexify;</span> xvar = Symbolics.variable(:x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div id="10" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">latexify</span>(Symbolics.<span class="fu">derivative</span>(<span class="fu">f</span>(xvar), xvar))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>UndefVarError: UndefVarError(:latexify, Main.Notebook)
+UndefVarError: `latexify` not defined in `Main.Notebook`
+Suggestion: check for spelling errors or missing imports.
+Stacktrace:
+ [1] top-level scope
+   @ ~/work/PyData2024-AutoDiff/PyData2024-AutoDiff/index.qmd:151</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<div id="12" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">latexify</span>(Symbolics.<span class="fu">derivative</span>(<span class="fu">g</span>(xvar), xvar))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>UndefVarError: UndefVarError(:latexify, Main.Notebook)
+UndefVarError: `latexify` not defined in `Main.Notebook`
+Suggestion: check for spelling errors or missing imports.
+Stacktrace:
+ [1] top-level scope
+   @ ~/work/PyData2024-AutoDiff/PyData2024-AutoDiff/index.qmd:163</code></pre>
+</div>
+</div>
+</div></div>
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Drawback</strong></p>
+</div>
+<div class="callout-content">
+<p>Does not scale to more complex functions.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="numeric-differentiation" class="slide level2">
+<h2>Numeric differentiation</h2>
+<p>Rely on finite differences with a small perturbation.</p>
+<p><span class="math display">\[\partial f(x)[\varepsilon] \approx \frac{f(x + \varepsilon) - f(x)}{\varepsilon}\]</span></p>
+<div class="columns">
+<div class="column" style="width:33%;">
+<div id="14" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a aria-hidden="true" tabindex="-1"></a>ε<span class="fl">1</span> <span class="op">=</span> <span class="fl">1e-1</span>  <span class="co"># too large</span></span>
+<span id="cb10-2"><a aria-hidden="true" tabindex="-1"></a>(<span class="fu">f</span>(x <span class="op">+</span> ε<span class="fl">1</span>) <span class="op">-</span> <span class="fu">f</span>(x)) <span class="op">/</span> ε<span class="fl">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>0.34924112245848793</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:33%;">
+<div id="16" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a aria-hidden="true" tabindex="-1"></a>ε<span class="fl">2</span> <span class="op">=</span> <span class="fl">1e-5</span>  <span class="co"># just right</span></span>
+<span id="cb12-2"><a aria-hidden="true" tabindex="-1"></a>(<span class="fu">f</span>(x <span class="op">+</span> ε<span class="fl">2</span>) <span class="op">-</span> <span class="fu">f</span>(x)) <span class="op">/</span> ε<span class="fl">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>0.35355294865091474</code></pre>
+</div>
+</div>
+</div><div class="column" style="width:33%;">
+<div id="18" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a aria-hidden="true" tabindex="-1"></a>ε<span class="fl">3</span> <span class="op">=</span> <span class="fl">1e-15</span>  <span class="co"># too small</span></span>
+<span id="cb14-2"><a aria-hidden="true" tabindex="-1"></a>(<span class="fu">f</span>(x <span class="op">+</span> ε<span class="fl">3</span>) <span class="op">-</span> <span class="fu">f</span>(x)) <span class="op">/</span> ε<span class="fl">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>0.22204460492503128</code></pre>
+</div>
+</div>
+</div></div>
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Drawback</strong></p>
+</div>
+<div class="callout-content">
+<p>Truncation or floating point errors depending on <span class="math inline">\(\varepsilon\)</span>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="automatic-or-algorithmic-differentiation" class="slide level2">
+<h2>Automatic (or algorithmic) differentiation</h2>
+<p>Reinterpret the program computing <span class="math inline">\(f\)</span> to obtain <span class="math inline">\(\partial f(x)\)</span> instead.</p>
+<div class="columns">
+<div class="column" style="width:65%;">
+<div id="20" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> Dual</span>
+<span id="cb16-2"><a aria-hidden="true" tabindex="-1"></a>  val<span class="op">::</span><span class="dt">Float64</span></span>
+<span id="cb16-3"><a aria-hidden="true" tabindex="-1"></a>  der<span class="op">::</span><span class="dt">Float64</span></span>
+<span id="cb16-4"><a aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb16-5"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="op">:</span><span class="fu">*</span>(a, x<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(a<span class="op">*</span>x.val, a<span class="op">*</span>x.der)</span>
+<span id="cb16-7"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="op">:</span><span class="fu">+</span>(x<span class="op">::</span><span class="dt">Dual</span>, y<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(x.val<span class="op">+</span>y.val, x.der<span class="op">+</span>y.der)</span>
+<span id="cb16-8"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="op">:/</span>(x<span class="op">::</span><span class="dt">Dual</span>, y<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(x.val<span class="op">/</span>y.val, (x.der<span class="op">*</span>y.val<span class="op">-</span>y.der<span class="op">*</span>x.val)<span class="op">/</span>y.val<span class="op">^</span><span class="fl">2</span>)</span>
+<span id="cb16-9"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="fu">sqrt</span>(x<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(√x.val, x.der<span class="op">/</span><span class="fl">2</span>√x.val)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div><div class="column" style="width:35%;">
+<div id="22" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>(<span class="fu">Dual</span>(<span class="fl">2.0</span>, <span class="fl">1.0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>Dual(1.4142135623730951, 0.35355339059327373)</code></pre>
+</div>
+</div>
+<div id="24" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">g</span>(<span class="fu">Dual</span>(<span class="fl">2.0</span>, <span class="fl">1.0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>Dual(1.4142156862745097, 0.35356593617839294)</code></pre>
+</div>
+</div>
+</div></div>
+<div class="callout callout-warning callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Drawback</strong></p>
+</div>
+<div class="callout-content">
+<p>Hard to reinterpret arbitrary code efficiently.</p>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="ad-under-the-hood" class="title-slide slide level1 center">
+<h1>AD under the hood</h1>
+
+</section>
+<section id="how-it-works" class="slide level2 scrollable">
+<h2>How it works</h2>
 <ol type="1">
-<li>Derivatives of <strong>basic functions</strong>: <span class="math inline">\(\exp, \log, \sin, \cos, \dots\)</span></li>
-<li>Composition with the <strong>chain rule</strong>:</li>
+<li>Hardcoded derivatives of basic functions: <span class="math inline">\(+, \times, \exp, \log, \sin, \cos\)</span></li>
+<li>Composition with the chain rule:</li>
 </ol>
-<p><span class="math display">\[\partial (f \circ g)(x) = \partial f(g(x)) \circ \partial g(x)\]</span></p>
-<p>or its adjoint<sup>1</sup></p>
-<p><span class="math display">\[\partial (f \circ g)^*(x) = \partial g(x)^* \circ \partial f(g(x))^*\]</span></p>
-<aside><ol class="aside-footnotes"><li id="fn2"><p>the “transpose” of a linear map</p></li></ol></aside></section>
-<section id="what-about-jacobian-matrices" class="slide level2">
-<h2>What about Jacobian matrices?</h2>
-<p>We could multiply matrices instead of composing linear maps:</p>
-<p><span class="math display">\[J_{f \circ g}(x) = J_f(g(x)) \cdot J_g(x)\]</span></p>
-<p>where the Jacobian matrix is</p>
-<p><span class="math display">\[J_f(x) = \left(\partial f_i / \partial x_j\right)_{i,j}\]</span></p>
-<ul>
-<li>very wasteful in high dimension (think of <span class="math inline">\(f = \mathrm{id}\)</span>)</li>
-<li>ill-suited to arbitrary spaces</li>
-</ul>
-</section>
-<section id="matrix-vector-products" class="slide level2">
-<h2>Matrix-vector products</h2>
-<p>We don’t need Jacobian matrices as long as we can compute their products with vectors:</p>
+<p><span class="math display">\[ f = g \circ h \qquad \implies \qquad \partial f(x) = \partial g(h(x)) \circ \partial h(x)\]</span></p>
+<p>Main implementation paradigms:</p>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p><strong>Jacobian-vector products</strong></p>
-<p><span class="math display">\[J_{f}(x) v = \partial f(x)[v]\]</span></p>
-<p>Propagate a perturbation <span class="math inline">\(v\)</span> from input to output</p>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Operator overloading</strong></p>
+</div>
+<div class="callout-content">
+<p>Define new types augmenting runtime operations.</p>
+</div>
+</div>
+</div>
 </div><div class="column" style="width:50%;">
-<p><strong>Vector-Jacobian products</strong></p>
-<p><span class="math display">\[w^\top J_{f}(x) = \partial f(x)^*[w]\]</span></p>
-<p>Backpropagate a sensitivity <span class="math inline">\(w\)</span> from output to input</p>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Source transformation</strong></p>
+</div>
+<div class="callout-content">
+<p>Preprocess the source code at compile time.</p>
+</div>
+</div>
+</div>
 </div></div>
 </section>
-<section id="forward-mode" class="slide level2">
-<h2>Forward mode</h2>
-<p>Consider <span class="math inline">\(f = f_L \circ \dots \circ f_1\)</span> and its Jacobian <span class="math inline">\(J = J_L \cdots J_1\)</span>.</p>
-<p>Jacobian-vector products decompose from layer <span class="math inline">\(1\)</span> to layer <span class="math inline">\(L\)</span>:</p>
-<p><span class="math display">\[J_L(J_{L-1}(\dots \underbrace{J_2(\underbrace{J_1 v}_{v_1})}_{v_2}))\]</span></p>
-<p>Forward mode AD relies on the chain rule.</p>
-</section>
-<section id="reverse-mode" class="slide level2">
-<h2>Reverse mode</h2>
-<p>Consider <span class="math inline">\(f = f_L \circ \dots \circ f_1\)</span> and its Jacobian <span class="math inline">\(J = J_L \cdots J_1\)</span>.</p>
-<p>Vector-Jacobian products decompose from layer <span class="math inline">\(L\)</span> to layer <span class="math inline">\(1\)</span>:</p>
-<p><span class="math display">\[((\underbrace{(\underbrace{w^\top J_L}_{w_L}) J_{L-1}}_{w_{L-1}} \dots ) J_2 ) J_1\]</span></p>
-<p>Reverse mode AD relies on the adjoint chain rule.</p>
-</section>
-<section id="jacobian-matrices-are-back" class="slide level2">
-<h2>Jacobian matrices are back</h2>
-<p>Consider <span class="math inline">\(f : \mathbb{R}^n \to \mathbb{R}^m\)</span>. How to recover the full Jacobian?</p>
+<section id="two-different-modes" class="slide level2">
+<h2>Two different modes</h2>
+<p>Consider <span class="math inline">\(f : x \in \mathbb{R}^n \longmapsto y \in \mathbb{R}^m\)</span>. Time <span class="math inline">\(T(f)\)</span> = one evaluation of <span class="math inline">\(f\)</span>.</p>
 <div class="columns">
-<div class="column" style="width:50%;">
+<div class="column" style="width:45%;">
 <p><strong>Forward mode</strong></p>
-<p>Column by column:</p>
-<p><span class="math display">\[J = \begin{pmatrix} J e_1 &amp; \dots &amp; J e_n \end{pmatrix}\]</span></p>
-<p>where <span class="math inline">\(e_i\)</span> is a basis vector.</p>
-</div><div class="column" style="width:50%;">
+<p>At cost <span class="math inline">\(\propto T(f)\)</span>, get all <span class="math inline">\(m\)</span> partial derivatives wrt input <span class="math inline">\(x_i\)</span>.</p>
+<p>Propagate an input perturbation onto the outputs.</p>
+</div><div class="column" style="width:10%;">
+
+</div><div class="column" style="width:45%;">
 <p><strong>Reverse mode</strong></p>
-<p>Row by row:</p>
-<p><span class="math display">\[J = \begin{pmatrix} e_1^\top J \\ \vdots \\ e_m^\top J \end{pmatrix}\]</span></p>
+<p>At cost <span class="math inline">\(\propto T(f)\)</span>, get all <span class="math inline">\(n\)</span> partial derivatives for output <span class="math inline">\(y_j\)</span>.</p>
+<p>Backpropagate an output sensitivity onto the inputs.</p>
 </div></div>
-</section>
-<section id="complexities" class="slide level2">
-<h2>Complexities</h2>
-<p>Consider <span class="math inline">\(f : \mathbb{R}^n \to \mathbb{R}^m\)</span>. How much does a Jacobian cost?</p>
 <div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
-<p><strong>Theorem</strong></p>
+<p><strong>Why is deep learning possible?</strong></p>
 </div>
 <div class="callout-content">
-<p>Each JVP or VJP takes as much time and space as <span class="math inline">\(O(1)\)</span> calls to <span class="math inline">\(f\)</span>.</p>
+<p>Because gradients in reverse mode are fast.</p>
 </div>
 </div>
 </div>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>sizes</th>
-<th>jacobian</th>
-<th>forward</th>
-<th>reverse</th>
-<th>best mode</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>generic</td>
-<td>jacobian</td>
-<td><span class="math inline">\(O(n)\)</span></td>
-<td><span class="math inline">\(O(m)\)</span></td>
-<td>depends</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(n = 1\)</span></td>
-<td>derivative</td>
-<td><span class="math inline">\(O(1)\)</span></td>
-<td><span class="math inline">\(O(m)\)</span></td>
-<td>forward</td>
-</tr>
-<tr class="odd">
-<td><span class="math inline">\(m = 1\)</span></td>
-<td>gradient</td>
-<td><span class="math inline">\(O(n)\)</span></td>
-<td><span class="math inline">\(O(1)\)</span></td>
-<td>reverse</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Fast reverse mode gradients make deep learning possible.</strong></p>
 </section></section>
 <section>
-<section id="using-ad" class="title-slide slide level1 center">
-<h1>Using AD</h1>
+<section id="ad-in-python-and-julia" class="title-slide slide level1 center">
+<h1>AD in Python and Julia</h1>
 
 </section>
-<section id="three-types-of-ad-users" class="slide level2 scrollable">
-<h2>Three types of AD users</h2>
-<ol type="1">
-<li><strong>Package users</strong> want to differentiate through functions</li>
-<li><strong>Package developers</strong> want to write differentiable functions</li>
-<li><strong>Backend developers</strong> want to create new AD systems</li>
-</ol>
+<section id="a-flurry-of-options" class="slide level2">
+<h2>A flurry of options</h2>
+<p>In Python, three main AD <em>frameworks</em>:</p>
+<div class="columns">
+<div class="column" style="width:33%;">
+<ul>
+<li><a href="https://www.tensorflow.org/"><code>TensorFlow</code></a></li>
+</ul>
+</div><div class="column" style="width:33%;">
+<ul>
+<li><a href="https://pytorch.org/"><code>PyTorch</code></a></li>
+</ul>
+</div><div class="column" style="width:33%;">
+<ul>
+<li><a href="https://jax.readthedocs.io/en/latest/index.html"><code>JAX</code></a></li>
+</ul>
+</div></div>
+<p>In Julia, a dozen or so AD <em>backends</em>:</p>
+<div class="columns">
+<div class="column" style="width:33%;">
+<ul>
+<li><a href="https://github.com/EnzymeAD/Enzyme.jl">Enzyme.jl</a></li>
+<li><a href="https://github.com/brianguenter/FastDifferentiation.jl">FastDifferentiation.jl</a></li>
+<li><a href="https://github.com/JuliaDiff/FiniteDiff.jl">FiniteDiff.jl</a></li>
+</ul>
+</div><div class="column" style="width:33%;">
+<ul>
+<li><a href="https://github.com/JuliaDiff/FiniteDifferences.jl">FiniteDifferences.jl</a></li>
+<li><a href="https://github.com/JuliaDiff/ForwardDiff.jl">ForwardDiff.jl</a></li>
+<li><a href="https://github.com/compintell/Mooncake.jl">Mooncake.jl</a></li>
+<li><a href="https://github.com/JuliaDiff/ReverseDiff.jl">ReverseDiff.jl</a></li>
+</ul>
+</div><div class="column" style="width:33%;">
+<ul>
+<li><a href="https://github.com/JuliaSymbolics/Symbolics.jl">Symbolics.jl</a></li>
+<li><a href="https://github.com/FluxML/Tracker.jl">Tracker.jl</a></li>
+<li><a href="https://github.com/FluxML/Zygote.jl">Zygote.jl</a></li>
+</ul>
+</div></div>
+<p>Each backend has its use cases, especially for scientific ML.</p>
 </section>
-<section id="python-vs.-julia-users" class="slide level2 smaller">
-<h2>Python vs.&nbsp;Julia: users</h2>
+<section id="python-julia-users" class="slide level2 smaller">
+<h2>Python &amp; Julia: users</h2>
 
 <img data-src="img/python_julia_user.png" class="r-stretch"><p>Image: courtesy of Adrian Hill</p>
 </section>
-<section id="python-vs.-julia-developers" class="slide level2 smaller">
-<h2>Python vs.&nbsp;Julia: developers</h2>
+<section id="python-julia-developers" class="slide level2 smaller">
+<h2>Python &amp; Julia: developers</h2>
 
 <img data-src="img/python_julia_dev.png" class="r-stretch"><p>Image: courtesy of Adrian Hill</p>
 </section>
-<section id="why-so-many-packages" class="slide level2">
-<h2>Why so many packages?</h2>
+<section id="why-the-difference" class="slide level2">
+<h2>Why the difference?</h2>
+<p>Because of the relation between tensor operations and AD:</p>
 <ul>
-<li>Conflicting <strong>paradigms</strong>:
-<ul>
-<li>numeric vs.&nbsp;symbolic vs.&nbsp;algorithmic</li>
-<li>operator overloading vs.&nbsp;source-to-source</li>
-</ul></li>
-<li>Cover varying <strong>subsets of the language</strong></li>
-<li>Historical reasons: developed by <strong>different people</strong></li>
+<li>In Python, tensors are tied to an AD framework</li>
+<li>In Julia, tensors are part of the core language</li>
 </ul>
-<p>Full list available at <a href="https://juliadiff.org/" class="uri">https://juliadiff.org/</a>.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>The good</strong></p>
+<p>No need to write 3 versions of every scientific library.</p>
+</div><div class="column" style="width:50%;">
+<p><strong>The bad</strong></p>
+<p>Julia AD backends support different subsets of the language.</p>
+</div></div>
+</section>
+<section id="the-importance-of-interfaces" class="slide level2">
+<h2>The importance of interfaces</h2>
+<p>Allow easy experimentation with different AD frameworks.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Python</strong></p>
+<p><a href="https://keras.io/">Keras</a> 3.0 supports Tensorflow, PyTorch and JAX.</p>
+</div><div class="column" style="width:50%;">
+<p><strong>Julia</strong></p>
+<p><a href="https://github.com/JuliaDiff/DifferentiationInterface.jl">DifferentiationInterface.jl</a> offers a common syntax.</p>
+</div></div>
 </section></section>
 <section>
 <section id="conclusion" class="title-slide slide level1 center">
@@ -422,14 +655,15 @@ Guillaume Dalle <a href="https://orcid.org/0000-0003-4866-1687" class="quarto-ti
 <h2>Going further</h2>
 <ul class="task-list">
 <li><label><input type="checkbox" checked="">AD through a simple function</label></li>
-<li><label><input type="checkbox">AD through an expectation <span class="citation" data-cites="mohamedMonteCarloGradient2020">(<a href="#/references" role="doc-biblioref" onclick="">Mohamed et al. 2020</a>)</span></label></li>
-<li><label><input type="checkbox">AD through a convex solver <span class="citation" data-cites="blondelEfficientModularImplicit2022">(<a href="#/references" role="doc-biblioref" onclick="">Blondel et al. 2022</a>)</span></label></li>
-<li><label><input type="checkbox">AD through a combinatorial solver <span class="citation" data-cites="mandiDecisionFocusedLearningFoundations2024">(<a href="#/references" role="doc-biblioref" onclick="">Mandi et al. 2024</a>)</span></label></li>
+<li><label><input type="checkbox">AD through a differential equation <span class="citation" data-cites="sapienzaDifferentiableProgrammingDifferential2024">(<a href="#/references" role="doc-biblioref" onclick="">Sapienza et al. 2024</a>)</span></label></li>
+<li><label><input type="checkbox">AD through a stochastic expectation <span class="citation" data-cites="mohamedMonteCarloGradient2020">(<a href="#/references" role="doc-biblioref" onclick="">Mohamed et al. 2020</a>)</span></label></li>
+<li><label><input type="checkbox">AD through a convex optimizer <span class="citation" data-cites="blondelEfficientModularImplicit2022">(<a href="#/references" role="doc-biblioref" onclick="">Blondel et al. 2022</a>)</span></label></li>
+<li><label><input type="checkbox">AD through a discrete optimizer <span class="citation" data-cites="mandiDecisionFocusedLearningFoundations2024">(<a href="#/references" role="doc-biblioref" onclick="">Mandi et al. 2024</a>)</span></label></li>
 </ul>
 </section>
 <section id="take-home-message" class="slide level2">
 <h2>Take-home message</h2>
-<p>Computing derivatives is <strong>automatic</strong> and efficient.</p>
+<p>Computing derivatives is <strong>automatic</strong> and <strong>efficient</strong>.</p>
 <p>Each AD system comes with <strong>limitations</strong>.</p>
 <p>Learn to recognize and overcome them.</p>
 </section>
@@ -457,11 +691,13 @@ Margossian, Charles C. 2019. <span>“A Review of Automatic Differentiation and 
 <div id="ref-mohamedMonteCarloGradient2020" class="csl-entry" role="listitem">
 Mohamed, Shakir, Mihaela Rosca, Michael Figurnov, and Andriy Mnih. 2020. <span>“Monte <span>Carlo Gradient Estimation</span> in <span>Machine Learning</span>.”</span> <em>Journal of Machine Learning Research</em> 21 (132): 1–62. <a href="http://jmlr.org/papers/v21/19-346.html">http://jmlr.org/papers/v21/19-346.html</a>.
 </div>
+<div id="ref-sapienzaDifferentiableProgrammingDifferential2024" class="csl-entry" role="listitem">
+Sapienza, Facundo, Jordi Bolibar, Frank Schäfer, Brian Groenke, Avik Pal, Victor Boussange, Patrick Heimbach, et al. 2024. <span>“Differentiable <span>Programming</span> for <span>Differential Equations</span>: <span>A Review</span>.”</span> arXiv. <a href="https://doi.org/10.48550/arXiv.2406.09699">https://doi.org/10.48550/arXiv.2406.09699</a>.
+</div>
 </div>
 
 
 </section></section>
-
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
@@ -643,9 +879,9 @@ Mohamed, Shakir, Mihaela Rosca, Michael Figurnov, and Andriy Mnih. 2020. <span>�
         // The "normal" size of the presentation, aspect ratio will be preserved
         // when the presentation is scaled to fit different resolutions. Can be
         // specified using percentage units.
-        width: 1050,
+        width: 1280,
 
-        height: 700,
+        height: 720,
 
         // Factor of the display size that should remain empty around the content
         margin: 0.1,

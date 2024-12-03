@@ -2,134 +2,127 @@
   {
     "objectID": "index.html#slides",
     "href": "index.html#slides",
-    "title": "Automatic Differentiation",
+    "title": "Automatic differentiation",
     "section": "Slides",
     "text": "Slides\nhttps://gdalle.github.io/PyData2024-AutoDiff/"
   },
   {
     "objectID": "index.html#motivation",
     "href": "index.html#motivation",
-    "title": "Automatic Differentiation",
+    "title": "Automatic differentiation",
     "section": "Motivation",
-    "text": "Motivation\n\n\n\n\n\n\nWhat is a derivative?\n\n\nA linear approximation of a function around a point.\n\n\n\n\n\n\n\n\n\nWhy do we care?\n\n\nDerivatives of complex programs are essential in optimization and machine learning.\n\n\n\n\n\n\n\n\n\nWhat do we need to do?\n\n\nNot much: Automatic Differentiation (AD) computes derivatives for us!"
+    "text": "Motivation\n\n\n\n\n\n\nWhat is differentiation?\n\n\nFinding a linear approximation of a function around a point.\n\n\n\n\n\n\n\n\n\nWhy do we care?\n\n\nDerivatives of complex programs are essential in optimization and machine learning.\n\n\n\n\n\n\n\n\n\nWhat do we need to do?\n\n\nNot much: automatic differentiation (AD) computes derivatives for us!"
   },
   {
     "objectID": "index.html#bibliography",
     "href": "index.html#bibliography",
-    "title": "Automatic Differentiation",
+    "title": "Automatic differentiation",
     "section": "Bibliography",
     "text": "Bibliography\n\nBlondel and Roulet (2024): the most recent book\nGriewank and Walther (2008): the bible of the field\nBaydin et al. (2018), Margossian (2019): concise surveys"
   },
   {
     "objectID": "index.html#derivatives-formal-definition",
     "href": "index.html#derivatives-formal-definition",
-    "title": "Automatic Differentiation",
+    "title": "Automatic differentiation",
     "section": "Derivatives: formal definition",
-    "text": "Derivatives: formal definition\nDerivative of \\(f\\) at point \\(x\\): linear map \\(\\partial f(x)\\) such that \\[f(x + v) = f(x) + \\partial f(x)[v] + o(\\lVert v \\rVert)\\]\nIn other words,\n\\[\\partial f(x)[v] = \\lim_{\\varepsilon \\to 0} \\frac{f(x + \\varepsilon v) - f(x)}{\\varepsilon}\\]"
+    "text": "Derivatives: formal definition\nDerivative of \\(f: \\mathbb{R}^n \\to \\mathbb{R}^m\\) at point \\(x\\): linear map \\(\\partial f(x)\\) such that \\[f(x + \\varepsilon) = f(x) + \\partial f(x)[\\varepsilon] + o(\\varepsilon)\\]\n\nFor \\(n = 1, m = 1\\), derivative represented by a number \\(f'(x)\\)\nFor \\(n &gt; 1, m = 1\\), derivative represented by a gradient vector \\(\\nabla f(x)\\)\nFor \\(n &gt; 1, m &gt; 1\\), derivative represented by a Jacobian matrix\n\n\\[\\partial f(x) = \\left(\\frac{\\partial f_i}{\\partial x_j} (x)\\right)_{1 \\leq i \\leq n, 1 \\leq j \\leq m}\\]"
   },
   {
-    "objectID": "index.html#various-flavors-of-differentiation",
-    "href": "index.html#various-flavors-of-differentiation",
-    "title": "Automatic Differentiation",
-    "section": "Various flavors of differentiation",
-    "text": "Various flavors of differentiation\n\nManual: work out \\(\\partial f\\) by hand\nNumeric: \\(\\partial f(x)[v] \\approx \\frac{f(x+\\varepsilon v) - f(x)}{\\varepsilon}\\)\nSymbolic: enter a formula for \\(f\\), get a formula for \\(\\partial f\\)\nAutomatic1: code a program for \\(f\\), get a program for \\(\\partial f(x)\\)\n\nor algorithmic"
+    "objectID": "index.html#manual-differentiation",
+    "href": "index.html#manual-differentiation",
+    "title": "Automatic differentiation",
+    "section": "Manual differentiation",
+    "text": "Manual differentiation\nWrite down formulas like you’re in high school.\n\n\n\nf(x) = √x  # computes sqrt\n\nfunction g(x)  # computes approximate sqrt\n  y = x\n  for i in 1:3\n    y = 0.5 * (y + x/y)\n  end\n  return y\nend\n\n\n\nx = 2.0\nf(x), g(x)\n\n(1.4142135623730951, 1.4142156862745097)\n\n\n\ndf(x) = 1 / 2√x\n\ndg(x) = error(\"I'm too lazy\")\n\n\n\n\n\n\n\n\nDrawback\n\n\nLabor-intensive, error-prone."
   },
   {
-    "objectID": "index.html#two-ingredients-of-ad",
-    "href": "index.html#two-ingredients-of-ad",
-    "title": "Automatic Differentiation",
-    "section": "Two ingredients of AD",
-    "text": "Two ingredients of AD\nAny derivative can be obtained from:\n\nDerivatives of basic functions: \\(\\exp, \\log, \\sin, \\cos, \\dots\\)\nComposition with the chain rule:\n\n\\[\\partial (f \\circ g)(x) = \\partial f(g(x)) \\circ \\partial g(x)\\]\nor its adjoint1\n\\[\\partial (f \\circ g)^*(x) = \\partial g(x)^* \\circ \\partial f(g(x))^*\\]\nthe “transpose” of a linear map"
+    "objectID": "index.html#symbolic-differentiation",
+    "href": "index.html#symbolic-differentiation",
+    "title": "Automatic differentiation",
+    "section": "Symbolic differentiation",
+    "text": "Symbolic differentiation\nAsk Mathematica / Wolfram Alpha to work out formulas for you.\n\nusing Symbolics, Latexify; xvar = Symbolics.variable(:x)\n\n\n\n\nlatexify(Symbolics.derivative(f(xvar), xvar))\n\nUndefVarError: UndefVarError(:latexify, Main.Notebook)\nUndefVarError: `latexify` not defined in `Main.Notebook`\nSuggestion: check for spelling errors or missing imports.\nStacktrace:\n [1] top-level scope\n   @ ~/work/PyData2024-AutoDiff/PyData2024-AutoDiff/index.qmd:151\n\n\n\n\nlatexify(Symbolics.derivative(g(xvar), xvar))\n\nUndefVarError: UndefVarError(:latexify, Main.Notebook)\nUndefVarError: `latexify` not defined in `Main.Notebook`\nSuggestion: check for spelling errors or missing imports.\nStacktrace:\n [1] top-level scope\n   @ ~/work/PyData2024-AutoDiff/PyData2024-AutoDiff/index.qmd:163\n\n\n\n\n\n\n\n\n\nDrawback\n\n\nDoes not scale to more complex functions."
   },
   {
-    "objectID": "index.html#what-about-jacobian-matrices",
-    "href": "index.html#what-about-jacobian-matrices",
-    "title": "Automatic Differentiation",
-    "section": "What about Jacobian matrices?",
-    "text": "What about Jacobian matrices?\nWe could multiply matrices instead of composing linear maps:\n\\[J_{f \\circ g}(x) = J_f(g(x)) \\cdot J_g(x)\\]\nwhere the Jacobian matrix is\n\\[J_f(x) = \\left(\\partial f_i / \\partial x_j\\right)_{i,j}\\]\n\nvery wasteful in high dimension (think of \\(f = \\mathrm{id}\\))\nill-suited to arbitrary spaces"
+    "objectID": "index.html#numeric-differentiation",
+    "href": "index.html#numeric-differentiation",
+    "title": "Automatic differentiation",
+    "section": "Numeric differentiation",
+    "text": "Numeric differentiation\nRely on finite differences with a small perturbation.\n\\[\\partial f(x)[\\varepsilon] \\approx \\frac{f(x + \\varepsilon) - f(x)}{\\varepsilon}\\]\n\n\n\nε1 = 1e-1  # too large\n(f(x + ε1) - f(x)) / ε1\n\n0.34924112245848793\n\n\n\n\nε2 = 1e-5  # just right\n(f(x + ε2) - f(x)) / ε2\n\n0.35355294865091474\n\n\n\n\nε3 = 1e-15  # too small\n(f(x + ε3) - f(x)) / ε3\n\n0.22204460492503128\n\n\n\n\n\n\n\n\n\nDrawback\n\n\nTruncation or floating point errors depending on \\(\\varepsilon\\)."
   },
   {
-    "objectID": "index.html#matrix-vector-products",
-    "href": "index.html#matrix-vector-products",
-    "title": "Automatic Differentiation",
-    "section": "Matrix-vector products",
-    "text": "Matrix-vector products\nWe don’t need Jacobian matrices as long as we can compute their products with vectors:\n\n\nJacobian-vector products\n\\[J_{f}(x) v = \\partial f(x)[v]\\]\nPropagate a perturbation \\(v\\) from input to output\n\nVector-Jacobian products\n\\[w^\\top J_{f}(x) = \\partial f(x)^*[w]\\]\nBackpropagate a sensitivity \\(w\\) from output to input"
+    "objectID": "index.html#automatic-or-algorithmic-differentiation",
+    "href": "index.html#automatic-or-algorithmic-differentiation",
+    "title": "Automatic differentiation",
+    "section": "Automatic (or algorithmic) differentiation",
+    "text": "Automatic (or algorithmic) differentiation\nReinterpret the program computing \\(f\\) to obtain \\(\\partial f(x)\\) instead.\n\n\n\nstruct Dual\n  val::Float64\n  der::Float64\nend\n\nBase.:*(a, x::Dual) = Dual(a*x.val, a*x.der)\nBase.:+(x::Dual, y::Dual) = Dual(x.val+y.val, x.der+y.der)\nBase.:/(x::Dual, y::Dual) = Dual(x.val/y.val, (x.der*y.val-y.der*x.val)/y.val^2)\nBase.sqrt(x::Dual) = Dual(√x.val, x.der/2√x.val)\n\n\n\nf(Dual(2.0, 1.0))\n\nDual(1.4142135623730951, 0.35355339059327373)\n\n\n\ng(Dual(2.0, 1.0))\n\nDual(1.4142156862745097, 0.35356593617839294)\n\n\n\n\n\n\n\n\n\nDrawback\n\n\nHard to reinterpret arbitrary code efficiently."
   },
   {
-    "objectID": "index.html#forward-mode",
-    "href": "index.html#forward-mode",
-    "title": "Automatic Differentiation",
-    "section": "Forward mode",
-    "text": "Forward mode\nConsider \\(f = f_L \\circ \\dots \\circ f_1\\) and its Jacobian \\(J = J_L \\cdots J_1\\).\nJacobian-vector products decompose from layer \\(1\\) to layer \\(L\\):\n\\[J_L(J_{L-1}(\\dots \\underbrace{J_2(\\underbrace{J_1 v}_{v_1})}_{v_2}))\\]\nForward mode AD relies on the chain rule."
+    "objectID": "index.html#how-it-works",
+    "href": "index.html#how-it-works",
+    "title": "Automatic differentiation",
+    "section": "How it works",
+    "text": "How it works\n\nHardcoded derivatives of basic functions: \\(+, \\times, \\exp, \\log, \\sin, \\cos\\)\nComposition with the chain rule:\n\n\\[ f = g \\circ h \\qquad \\implies \\qquad \\partial f(x) = \\partial g(h(x)) \\circ \\partial h(x)\\]\nMain implementation paradigms:\n\n\n\n\n\n\n\n\nOperator overloading\n\n\nDefine new types augmenting runtime operations.\n\n\n\n\n\n\n\n\n\n\nSource transformation\n\n\nPreprocess the source code at compile time."
   },
   {
-    "objectID": "index.html#reverse-mode",
-    "href": "index.html#reverse-mode",
-    "title": "Automatic Differentiation",
-    "section": "Reverse mode",
-    "text": "Reverse mode\nConsider \\(f = f_L \\circ \\dots \\circ f_1\\) and its Jacobian \\(J = J_L \\cdots J_1\\).\nVector-Jacobian products decompose from layer \\(L\\) to layer \\(1\\):\n\\[((\\underbrace{(\\underbrace{w^\\top J_L}_{w_L}) J_{L-1}}_{w_{L-1}} \\dots ) J_2 ) J_1\\]\nReverse mode AD relies on the adjoint chain rule."
+    "objectID": "index.html#two-different-modes",
+    "href": "index.html#two-different-modes",
+    "title": "Automatic differentiation",
+    "section": "Two different modes",
+    "text": "Two different modes\nConsider \\(f : x \\in \\mathbb{R}^n \\longmapsto y \\in \\mathbb{R}^m\\). Time \\(T(f)\\) = one evaluation of \\(f\\).\n\n\nForward mode\nAt cost \\(\\propto T(f)\\), get all \\(m\\) partial derivatives wrt input \\(x_i\\).\nPropagate an input perturbation onto the outputs.\n\n\n\nReverse mode\nAt cost \\(\\propto T(f)\\), get all \\(n\\) partial derivatives for output \\(y_j\\).\nBackpropagate an output sensitivity onto the inputs.\n\n\n\n\n\n\n\nWhy is deep learning possible?\n\n\nBecause gradients in reverse mode are fast."
   },
   {
-    "objectID": "index.html#jacobian-matrices-are-back",
-    "href": "index.html#jacobian-matrices-are-back",
-    "title": "Automatic Differentiation",
-    "section": "Jacobian matrices are back",
-    "text": "Jacobian matrices are back\nConsider \\(f : \\mathbb{R}^n \\to \\mathbb{R}^m\\). How to recover the full Jacobian?\n\n\nForward mode\nColumn by column:\n\\[J = \\begin{pmatrix} J e_1 & \\dots & J e_n \\end{pmatrix}\\]\nwhere \\(e_i\\) is a basis vector.\n\nReverse mode\nRow by row:\n\\[J = \\begin{pmatrix} e_1^\\top J \\\\ \\vdots \\\\ e_m^\\top J \\end{pmatrix}\\]"
+    "objectID": "index.html#a-flurry-of-options",
+    "href": "index.html#a-flurry-of-options",
+    "title": "Automatic differentiation",
+    "section": "A flurry of options",
+    "text": "A flurry of options\nIn Python, three main AD frameworks:\n\n\n\nTensorFlow\n\n\n\nPyTorch\n\n\n\nJAX\n\n\nIn Julia, a dozen or so AD backends:\n\n\n\nEnzyme.jl\nFastDifferentiation.jl\nFiniteDiff.jl\n\n\n\nFiniteDifferences.jl\nForwardDiff.jl\nMooncake.jl\nReverseDiff.jl\n\n\n\nSymbolics.jl\nTracker.jl\nZygote.jl\n\n\nEach backend has its use cases, especially for scientific ML."
   },
   {
-    "objectID": "index.html#complexities",
-    "href": "index.html#complexities",
-    "title": "Automatic Differentiation",
-    "section": "Complexities",
-    "text": "Complexities\nConsider \\(f : \\mathbb{R}^n \\to \\mathbb{R}^m\\). How much does a Jacobian cost?\n\n\n\n\n\n\nTheorem\n\n\nEach JVP or VJP takes as much time and space as \\(O(1)\\) calls to \\(f\\).\n\n\n\n\n\n\nsizes\njacobian\nforward\nreverse\nbest mode\n\n\n\n\ngeneric\njacobian\n\\(O(n)\\)\n\\(O(m)\\)\ndepends\n\n\n\\(n = 1\\)\nderivative\n\\(O(1)\\)\n\\(O(m)\\)\nforward\n\n\n\\(m = 1\\)\ngradient\n\\(O(n)\\)\n\\(O(1)\\)\nreverse\n\n\n\nFast reverse mode gradients make deep learning possible."
+    "objectID": "index.html#python-julia-users",
+    "href": "index.html#python-julia-users",
+    "title": "Automatic differentiation",
+    "section": "Python & Julia: users",
+    "text": "Python & Julia: users\n\nImage: courtesy of Adrian Hill"
   },
   {
-    "objectID": "index.html#three-types-of-ad-users",
-    "href": "index.html#three-types-of-ad-users",
-    "title": "Automatic Differentiation",
-    "section": "Three types of AD users",
-    "text": "Three types of AD users\n\nPackage users want to differentiate through functions\nPackage developers want to write differentiable functions\nBackend developers want to create new AD systems"
+    "objectID": "index.html#python-julia-developers",
+    "href": "index.html#python-julia-developers",
+    "title": "Automatic differentiation",
+    "section": "Python & Julia: developers",
+    "text": "Python & Julia: developers\n\nImage: courtesy of Adrian Hill"
   },
   {
-    "objectID": "index.html#python-vs.-julia-users",
-    "href": "index.html#python-vs.-julia-users",
-    "title": "Automatic Differentiation",
-    "section": "Python vs. Julia: users",
-    "text": "Python vs. Julia: users\n\nImage: courtesy of Adrian Hill"
+    "objectID": "index.html#why-the-difference",
+    "href": "index.html#why-the-difference",
+    "title": "Automatic differentiation",
+    "section": "Why the difference?",
+    "text": "Why the difference?\nBecause of the relation between tensor operations and AD:\n\nIn Python, tensors are tied to an AD framework\nIn Julia, tensors are part of the core language\n\n\n\nThe good\nNo need to write 3 versions of every scientific library.\n\nThe bad\nJulia AD backends support different subsets of the language."
   },
   {
-    "objectID": "index.html#python-vs.-julia-developers",
-    "href": "index.html#python-vs.-julia-developers",
-    "title": "Automatic Differentiation",
-    "section": "Python vs. Julia: developers",
-    "text": "Python vs. Julia: developers\n\nImage: courtesy of Adrian Hill"
-  },
-  {
-    "objectID": "index.html#why-so-many-packages",
-    "href": "index.html#why-so-many-packages",
-    "title": "Automatic Differentiation",
-    "section": "Why so many packages?",
-    "text": "Why so many packages?\n\nConflicting paradigms:\n\nnumeric vs. symbolic vs. algorithmic\noperator overloading vs. source-to-source\n\nCover varying subsets of the language\nHistorical reasons: developed by different people\n\nFull list available at https://juliadiff.org/."
+    "objectID": "index.html#the-importance-of-interfaces",
+    "href": "index.html#the-importance-of-interfaces",
+    "title": "Automatic differentiation",
+    "section": "The importance of interfaces",
+    "text": "The importance of interfaces\nAllow easy experimentation with different AD frameworks.\n\n\nPython\nKeras 3.0 supports Tensorflow, PyTorch and JAX.\n\nJulia\nDifferentiationInterface.jl offers a common syntax."
   },
   {
     "objectID": "index.html#going-further",
     "href": "index.html#going-further",
-    "title": "Automatic Differentiation",
+    "title": "Automatic differentiation",
     "section": "Going further",
-    "text": "Going further\n\nAD through a simple function\nAD through an expectation (Mohamed et al. 2020)\nAD through a convex solver (Blondel et al. 2022)\nAD through a combinatorial solver (Mandi et al. 2024)"
+    "text": "Going further\n\nAD through a simple function\nAD through a differential equation (Sapienza et al. 2024)\nAD through a stochastic expectation (Mohamed et al. 2020)\nAD through a convex optimizer (Blondel et al. 2022)\nAD through a discrete optimizer (Mandi et al. 2024)"
   },
   {
     "objectID": "index.html#take-home-message",
     "href": "index.html#take-home-message",
-    "title": "Automatic Differentiation",
+    "title": "Automatic differentiation",
     "section": "Take-home message",
     "text": "Take-home message\nComputing derivatives is automatic and efficient.\nEach AD system comes with limitations.\nLearn to recognize and overcome them."
   },
   {
     "objectID": "index.html#references",
     "href": "index.html#references",
-    "title": "Automatic Differentiation",
+    "title": "Automatic differentiation",
     "section": "References",
-    "text": "References\n\n\nBaydin, Atilim Gunes, Barak A. Pearlmutter, Alexey Andreyevich Radul, and Jeffrey Mark Siskind. 2018. “Automatic Differentiation in Machine Learning: A Survey.” Journal of Machine Learning Research 18 (153): 1–43. http://jmlr.org/papers/v18/17-468.html.\n\n\nBlondel, Mathieu, Quentin Berthet, Marco Cuturi, Roy Frostig, Stephan Hoyer, Felipe Llinares-López, Fabian Pedregosa, and Jean-Philippe Vert. 2022. “Efficient and Modular Implicit Differentiation.” In Advances in Neural Information Processing Systems. https://openreview.net/forum?id=Q-HOv_zn6G.\n\n\nBlondel, Mathieu, and Vincent Roulet. 2024. “The Elements of Differentiable Programming.” arXiv. https://doi.org/10.48550/arXiv.2403.14606.\n\n\nGriewank, Andreas, and Andrea Walther. 2008. Evaluating Derivatives: Principles and Techniques of Algorithmic Differentiation. 2nd ed. Philadelphia, PA: Society for Industrial and Applied Mathematics. https://epubs.siam.org/doi/book/10.1137/1.9780898717761.\n\n\nMandi, Jayanta, James Kotary, Senne Berden, Maxime Mulamba, Victor Bucarey, Tias Guns, and Ferdinando Fioretto. 2024. “Decision-Focused Learning: Foundations, State of the Art, Benchmark and Future Opportunities.” Journal of Artificial Intelligence Research 80 (August): 1623–1701. https://doi.org/10.1613/jair.1.15320.\n\n\nMargossian, Charles C. 2019. “A Review of Automatic Differentiation and Its Efficient Implementation.” WIREs Data Mining and Knowledge Discovery 9 (4): e1305. https://doi.org/10.1002/widm.1305.\n\n\nMohamed, Shakir, Mihaela Rosca, Michael Figurnov, and Andriy Mnih. 2020. “Monte Carlo Gradient Estimation in Machine Learning.” Journal of Machine Learning Research 21 (132): 1–62. http://jmlr.org/papers/v21/19-346.html."
+    "text": "References\n\n\nBaydin, Atilim Gunes, Barak A. Pearlmutter, Alexey Andreyevich Radul, and Jeffrey Mark Siskind. 2018. “Automatic Differentiation in Machine Learning: A Survey.” Journal of Machine Learning Research 18 (153): 1–43. http://jmlr.org/papers/v18/17-468.html.\n\n\nBlondel, Mathieu, Quentin Berthet, Marco Cuturi, Roy Frostig, Stephan Hoyer, Felipe Llinares-López, Fabian Pedregosa, and Jean-Philippe Vert. 2022. “Efficient and Modular Implicit Differentiation.” In Advances in Neural Information Processing Systems. https://openreview.net/forum?id=Q-HOv_zn6G.\n\n\nBlondel, Mathieu, and Vincent Roulet. 2024. “The Elements of Differentiable Programming.” arXiv. https://doi.org/10.48550/arXiv.2403.14606.\n\n\nGriewank, Andreas, and Andrea Walther. 2008. Evaluating Derivatives: Principles and Techniques of Algorithmic Differentiation. 2nd ed. Philadelphia, PA: Society for Industrial and Applied Mathematics. https://epubs.siam.org/doi/book/10.1137/1.9780898717761.\n\n\nMandi, Jayanta, James Kotary, Senne Berden, Maxime Mulamba, Victor Bucarey, Tias Guns, and Ferdinando Fioretto. 2024. “Decision-Focused Learning: Foundations, State of the Art, Benchmark and Future Opportunities.” Journal of Artificial Intelligence Research 80 (August): 1623–1701. https://doi.org/10.1613/jair.1.15320.\n\n\nMargossian, Charles C. 2019. “A Review of Automatic Differentiation and Its Efficient Implementation.” WIREs Data Mining and Knowledge Discovery 9 (4): e1305. https://doi.org/10.1002/widm.1305.\n\n\nMohamed, Shakir, Mihaela Rosca, Michael Figurnov, and Andriy Mnih. 2020. “Monte Carlo Gradient Estimation in Machine Learning.” Journal of Machine Learning Research 21 (132): 1–62. http://jmlr.org/papers/v21/19-346.html.\n\n\nSapienza, Facundo, Jordi Bolibar, Frank Schäfer, Brian Groenke, Avik Pal, Victor Boussange, Patrick Heimbach, et al. 2024. “Differentiable Programming for Differential Equations: A Review.” arXiv. https://doi.org/10.48550/arXiv.2406.09699."
   }
 ]
