@@ -23,6 +23,7 @@ execute:
   echo: true
   freeze: auto
   error: true
+from: markdown+emoji
 ---
 
 # Introduction
@@ -52,12 +53,6 @@ Derivatives of complex programs are essential in optimization and machine learni
 
 Not much: automatic differentiation (AD) computes derivatives for us!
 :::
-
-## Bibliography
-
-- @blondelElementsDifferentiableProgramming2024: the most recent book
-- @griewankEvaluatingDerivativesPrinciples2008: the bible of the field
-- @baydinAutomaticDifferentiationMachine2018, @margossianReviewAutomaticDifferentiation2019: concise surveys
 
 # Flavors of differentiation
 
@@ -96,17 +91,20 @@ end
 :::
 
 ::: {.column width="50%"}
-```{julia}
-x = 2.0
-f(x), g(x)
-```
 
 ```{julia}
 #| output: false
 
 df(x) = 1 / 2√x
+dg(x) = @info "I'm too lazy"
+```
 
-dg(x) = error("I'm too lazy")
+```{julia}
+x = 2.0
+f(x), df(x)
+```
+```{julia}
+g(x), dg(x)
 ```
 :::
 
@@ -124,7 +122,7 @@ Ask Mathematica / Wolfram Alpha to work out formulas for you.
 
 ```{julia}
 #| output: false
-using Symbolics, Latexify; xvar = Symbolics.variable(:x)
+using Symbolics; xvar = Symbolics.variable(:x)
 ```
 
 :::: {.columns}
@@ -132,7 +130,7 @@ using Symbolics, Latexify; xvar = Symbolics.variable(:x)
 ::: {.column width="50%"}
 
 ```{julia}
-latexify(Symbolics.derivative(f(xvar), xvar))
+Symbolics.derivative(f(xvar), xvar)
 ```
 
 :::
@@ -140,7 +138,7 @@ latexify(Symbolics.derivative(f(xvar), xvar))
 ::: {.column width="50%"}
 
 ```{julia}
-latexify(Symbolics.derivative(g(xvar), xvar))
+Symbolics.derivative(g(xvar), xvar)
 ```
 
 :::
@@ -365,75 +363,66 @@ Each backend has its use cases, especially for scientific ML.
 
 ![](img/python_julia_user.png)
 
+::: {style="font-size: 50%;"}
+
 Image: courtesy of Adrian Hill
+
+:::
 
 ## Python & Julia: developers {.smaller}
 
 ![](img/python_julia_dev.png)
 
+::: {style="font-size: 50%;"}
+
 Image: courtesy of Adrian Hill
+
+:::
 
 ## Why the difference?
 
-Because of the relation between tensor operations and AD:
+|  | Python | Julia |
+|---------|:-----|:------|
+| Math & tensors | Framework-specific | Part of the core language |
+| AD development | Centralized (x3) | Decentralized |
+| Limits of AD | :white_check_mark: Well-defined | :x: Fuzzy |
+| Scientific libraries | :x: Split effort | :white_check_mark: Shared effort |
 
-- In Python, tensors are tied to an AD framework
-- In Julia, tensors are part of the core language
+::: {.callout-tip}
+## Does it have to be this way?
+
+AD could be a language feature instead of a post-hoc addition.
+:::
+
+## Interfaces for experimenting
 
 :::: {.columns}
 
 ::: {.column width="50%"}
 
-**The good**
+[Keras](https://keras.io/) now supports Tensorflow, PyTorch and JAX.
 
-No need to write 3 versions of every scientific library.
+![](img/keras.jpg){width=600}
+
+::: {style="font-size: 50%;"}
+
+Image: from Keras 3.0 [blog post](https://keras.io/keras_3/)
+
+:::
 
 :::
 
 ::: {.column width="50%"}
 
-**The bad**
+[DifferentiationInterface.jl](https://github.com/JuliaDiff/DifferentiationInterface.jl) talks to all Julia AD backends.
 
-Julia AD backends support different subsets of the language.
-
-:::
-
-::::
-
-## The importance of interfaces
-
-Allow easy experimentation with different AD frameworks.
-
-
-:::: {.columns}
-
-::: {.column width="50%"}
-
-**Python**
-
-[Keras](https://keras.io/) 3.0 supports Tensorflow, PyTorch and JAX.
-
-:::
-
-::: {.column width="50%"}
-
-**Julia**
-
-[DifferentiationInterface.jl](https://github.com/JuliaDiff/DifferentiationInterface.jl) offers a common syntax.
+![](img/di.svg){width=300}
 
 :::
 
 ::::
 
 # Conclusion
-
-## Going further
-
-- [x] AD through a simple function
-- [ ] AD through a differential equation [@sapienzaDifferentiableProgrammingDifferential2024]
-- [ ] AD through a stochastic expectation [@mohamedMonteCarloGradient2020]
-- [ ] AD through a convex optimizer [@blondelEfficientModularImplicit2022]
-- [ ] AD through a discrete optimizer [@mandiDecisionFocusedLearningFoundations2024]
 
 ## Take-home message
 
@@ -442,6 +431,20 @@ Computing derivatives is **automatic** and **efficient**.
 Each AD system comes with **limitations**.
 
 Learn to recognize and overcome them.
+
+## Bibliography
+
+- @blondelElementsDifferentiableProgramming2024: the most recent book
+- @griewankEvaluatingDerivativesPrinciples2008: the bible of the field
+- @baydinAutomaticDifferentiationMachine2018, @margossianReviewAutomaticDifferentiation2019: concise surveys
+
+## Going further
+
+- [x] AD through a simple function
+- [ ] AD through a differential equation [@sapienzaDifferentiableProgrammingDifferential2024]
+- [ ] AD through a stochastic expectation [@mohamedMonteCarloGradient2020]
+- [ ] AD through a convex optimizer [@blondelEfficientModularImplicit2022]
+- [ ] AD through a discrete optimizer [@mandiDecisionFocusedLearningFoundations2024]
 
 ## References
 
