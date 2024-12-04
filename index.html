@@ -359,31 +359,25 @@ Guillaume Dalle <a href="https://orcid.org/0000-0003-4866-1687" class="quarto-ti
 <h2>Symbolic differentiation</h2>
 <p>Ask Mathematica / Wolfram Alpha to work out formulas for you.</p>
 <div id="10" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Symbolics;</span> xvar = Symbolics.variable(:x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Symbolics</span>, <span class="bu">Latexify;</span> xvar = Symbolics.variable(:x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="columns">
 <div class="column" style="width:50%;">
 <div id="12" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a aria-hidden="true" tabindex="-1"></a>Symbolics.<span class="fu">derivative</span>(<span class="fu">f</span>(xvar), xvar)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>UndefVarError: UndefVarError(:Symbolics, Main.Notebook)
-UndefVarError: `Symbolics` not defined in `Main.Notebook`
-Suggestion: check for spelling errors or missing imports.
-Stacktrace:
- [1] top-level scope
-   @ ~/work/PyData2024-AutoDiff/PyData2024-AutoDiff/index.qmd:150</code></pre>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">latexify</span>(Symbolics.<span class="fu">derivative</span>(<span class="fu">f</span>(xvar), xvar))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="1">
+<p><span class="math display">\[\begin{equation}
+\frac{1}{2 \sqrt{x}}
+\end{equation}\]</span></p>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
 <div id="14" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a aria-hidden="true" tabindex="-1"></a>Symbolics.<span class="fu">derivative</span>(<span class="fu">g</span>(xvar), xvar)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>UndefVarError: UndefVarError(:Symbolics, Main.Notebook)
-UndefVarError: `Symbolics` not defined in `Main.Notebook`
-Suggestion: check for spelling errors or missing imports.
-Stacktrace:
- [1] top-level scope
-   @ ~/work/PyData2024-AutoDiff/PyData2024-AutoDiff/index.qmd:162</code></pre>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">latexify</span>(Symbolics.<span class="fu">derivative</span>(<span class="fu">g</span>(xvar), xvar))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="1">
+<p><span class="math display">\[\begin{equation}
+0.5 \left( 0.5 \left( 0.5 + \frac{1}{0.5 \left( 1 + x \right)} + \frac{ - 0.5 x}{0.25 \left( 1 + x \right)^{2}} \right) + \frac{1}{0.5 \left( 0.5 \left( 1 + x \right) + \frac{x}{0.5 \left( 1 + x \right)} \right)} - 0.5 \left( 0.5 + \frac{1}{0.5 \left( 1 + x \right)} + \frac{ - 0.5 x}{0.25 \left( 1 + x \right)^{2}} \right) \frac{x}{0.25 \left( 0.5 \left( 1 + x \right) + \frac{x}{0.5 \left( 1 + x \right)} \right)^{2}} \right)
+\end{equation}\]</span></p>
 </div>
 </div>
 </div></div>
@@ -408,24 +402,24 @@ Stacktrace:
 <div class="columns">
 <div class="column" style="width:33%;">
 <div id="16" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a aria-hidden="true" tabindex="-1"></a>ε<span class="fl">1</span> <span class="op">=</span> <span class="fl">1e-1</span>  <span class="co"># too large</span></span>
-<span id="cb13-2"><a aria-hidden="true" tabindex="-1"></a>(<span class="fu">f</span>(x <span class="op">+</span> ε<span class="fl">1</span>) <span class="op">-</span> <span class="fu">f</span>(x)) <span class="op">/</span> ε<span class="fl">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a aria-hidden="true" tabindex="-1"></a>ε<span class="fl">1</span> <span class="op">=</span> <span class="fl">1e-1</span>  <span class="co"># too large</span></span>
+<span id="cb11-2"><a aria-hidden="true" tabindex="-1"></a>(<span class="fu">f</span>(x <span class="op">+</span> ε<span class="fl">1</span>) <span class="op">-</span> <span class="fu">f</span>(x)) <span class="op">/</span> ε<span class="fl">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>0.34924112245848793</code></pre>
 </div>
 </div>
 </div><div class="column" style="width:33%;">
 <div id="18" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a aria-hidden="true" tabindex="-1"></a>ε<span class="fl">2</span> <span class="op">=</span> <span class="fl">1e-5</span>  <span class="co"># just right</span></span>
-<span id="cb15-2"><a aria-hidden="true" tabindex="-1"></a>(<span class="fu">f</span>(x <span class="op">+</span> ε<span class="fl">2</span>) <span class="op">-</span> <span class="fu">f</span>(x)) <span class="op">/</span> ε<span class="fl">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a aria-hidden="true" tabindex="-1"></a>ε<span class="fl">2</span> <span class="op">=</span> <span class="fl">1e-5</span>  <span class="co"># just right</span></span>
+<span id="cb13-2"><a aria-hidden="true" tabindex="-1"></a>(<span class="fu">f</span>(x <span class="op">+</span> ε<span class="fl">2</span>) <span class="op">-</span> <span class="fu">f</span>(x)) <span class="op">/</span> ε<span class="fl">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>0.35355294865091474</code></pre>
 </div>
 </div>
 </div><div class="column" style="width:33%;">
 <div id="20" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a aria-hidden="true" tabindex="-1"></a>ε<span class="fl">3</span> <span class="op">=</span> <span class="fl">1e-15</span>  <span class="co"># too small</span></span>
-<span id="cb17-2"><a aria-hidden="true" tabindex="-1"></a>(<span class="fu">f</span>(x <span class="op">+</span> ε<span class="fl">3</span>) <span class="op">-</span> <span class="fu">f</span>(x)) <span class="op">/</span> ε<span class="fl">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a aria-hidden="true" tabindex="-1"></a>ε<span class="fl">3</span> <span class="op">=</span> <span class="fl">1e-15</span>  <span class="co"># too small</span></span>
+<span id="cb15-2"><a aria-hidden="true" tabindex="-1"></a>(<span class="fu">f</span>(x <span class="op">+</span> ε<span class="fl">3</span>) <span class="op">-</span> <span class="fu">f</span>(x)) <span class="op">/</span> ε<span class="fl">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>0.22204460492503128</code></pre>
 </div>
@@ -451,25 +445,25 @@ Stacktrace:
 <div class="columns">
 <div class="column" style="width:65%;">
 <div id="22" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> Dual</span>
-<span id="cb19-2"><a aria-hidden="true" tabindex="-1"></a>  val<span class="op">::</span><span class="dt">Float64</span></span>
-<span id="cb19-3"><a aria-hidden="true" tabindex="-1"></a>  der<span class="op">::</span><span class="dt">Float64</span></span>
-<span id="cb19-4"><a aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb19-5"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-6"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="op">:</span><span class="fu">*</span>(a, x<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(a<span class="op">*</span>x.val, a<span class="op">*</span>x.der)</span>
-<span id="cb19-7"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="op">:</span><span class="fu">+</span>(x<span class="op">::</span><span class="dt">Dual</span>, y<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(x.val<span class="op">+</span>y.val, x.der<span class="op">+</span>y.der)</span>
-<span id="cb19-8"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="op">:/</span>(x<span class="op">::</span><span class="dt">Dual</span>, y<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(x.val<span class="op">/</span>y.val, (x.der<span class="op">*</span>y.val<span class="op">-</span>y.der<span class="op">*</span>x.val)<span class="op">/</span>y.val<span class="op">^</span><span class="fl">2</span>)</span>
-<span id="cb19-9"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="fu">sqrt</span>(x<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(√x.val, x.der<span class="op">/</span><span class="fl">2</span>√x.val)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> Dual</span>
+<span id="cb17-2"><a aria-hidden="true" tabindex="-1"></a>  val<span class="op">::</span><span class="dt">Float64</span></span>
+<span id="cb17-3"><a aria-hidden="true" tabindex="-1"></a>  der<span class="op">::</span><span class="dt">Float64</span></span>
+<span id="cb17-4"><a aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb17-5"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="op">:</span><span class="fu">*</span>(a, x<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(a<span class="op">*</span>x.val, a<span class="op">*</span>x.der)</span>
+<span id="cb17-7"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="op">:</span><span class="fu">+</span>(x<span class="op">::</span><span class="dt">Dual</span>, y<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(x.val<span class="op">+</span>y.val, x.der<span class="op">+</span>y.der)</span>
+<span id="cb17-8"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="op">:/</span>(x<span class="op">::</span><span class="dt">Dual</span>, y<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(x.val<span class="op">/</span>y.val, (x.der<span class="op">*</span>y.val<span class="op">-</span>y.der<span class="op">*</span>x.val)<span class="op">/</span>y.val<span class="op">^</span><span class="fl">2</span>)</span>
+<span id="cb17-9"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="fu">sqrt</span>(x<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(√x.val, x.der<span class="op">/</span><span class="fl">2</span>√x.val)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div><div class="column" style="width:35%;">
 <div id="24" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>(<span class="fu">Dual</span>(<span class="fl">2.0</span>, <span class="fl">1.0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>(<span class="fu">Dual</span>(<span class="fl">2.0</span>, <span class="fl">1.0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>Dual(1.4142135623730951, 0.35355339059327373)</code></pre>
 </div>
 </div>
 <div id="26" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">g</span>(<span class="fu">Dual</span>(<span class="fl">2.0</span>, <span class="fl">1.0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">g</span>(<span class="fu">Dual</span>(<span class="fl">2.0</span>, <span class="fl">1.0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>Dual(1.4142156862745097, 0.35356593617839294)</code></pre>
 </div>
