@@ -14,13 +14,6 @@
     "text": "Motivation\n\n\n\n\n\n\nWhat is differentiation?\n\n\nFinding a linear approximation of a function around a point.\n\n\n\n\n\n\n\n\n\nWhy do we care?\n\n\nDerivatives of complex programs are essential in optimization and machine learning.\n\n\n\n\n\n\n\n\n\nWhat do we need to do?\n\n\nNot much: automatic differentiation (AD) computes derivatives for us!"
   },
   {
-    "objectID": "index.html#bibliography",
-    "href": "index.html#bibliography",
-    "title": "Automatic differentiation",
-    "section": "Bibliography",
-    "text": "Bibliography\n\nBlondel and Roulet (2024): the most recent book\nGriewank and Walther (2008): the bible of the field\nBaydin et al. (2018), Margossian (2019): concise surveys"
-  },
-  {
     "objectID": "index.html#derivatives-formal-definition",
     "href": "index.html#derivatives-formal-definition",
     "title": "Automatic differentiation",
@@ -32,14 +25,14 @@
     "href": "index.html#manual-differentiation",
     "title": "Automatic differentiation",
     "section": "Manual differentiation",
-    "text": "Manual differentiation\nWrite down formulas like you’re in high school.\n\n\n\nf(x) = √x  # computes sqrt\n\nfunction g(x)  # computes approximate sqrt\n  y = x\n  for i in 1:3\n    y = 0.5 * (y + x/y)\n  end\n  return y\nend\n\n\n\nx = 2.0\nf(x), g(x)\n\n(1.4142135623730951, 1.4142156862745097)\n\n\n\ndf(x) = 1 / 2√x\n\ndg(x) = error(\"I'm too lazy\")\n\n\n\n\n\n\n\n\nDrawback\n\n\nLabor-intensive, error-prone."
+    "text": "Manual differentiation\nWrite down formulas like you’re in high school.\n\n\n\nf(x) = √x  # computes sqrt\n\nfunction g(x)  # computes approximate sqrt\n  y = x\n  for i in 1:3\n    y = 0.5 * (y + x/y)\n  end\n  return y\nend\n\n\n\ndf(x) = 1 / 2√x\ndg(x) = @info \"I'm too lazy\"\n\n\nx = 2.0\nf(x), df(x)\n\n(1.4142135623730951, 0.35355339059327373)\n\n\n\ng(x), dg(x)\n\n[ Info: I'm too lazy\n\n\n(1.4142156862745097, nothing)\n\n\n\n\n\n\n\n\n\nDrawback\n\n\nLabor-intensive, error-prone."
   },
   {
     "objectID": "index.html#symbolic-differentiation",
     "href": "index.html#symbolic-differentiation",
     "title": "Automatic differentiation",
     "section": "Symbolic differentiation",
-    "text": "Symbolic differentiation\nAsk Mathematica / Wolfram Alpha to work out formulas for you.\n\nusing Symbolics, Latexify; xvar = Symbolics.variable(:x)\n\n\n\n\nlatexify(Symbolics.derivative(f(xvar), xvar))\n\nUndefVarError: UndefVarError(:latexify, Main.Notebook)\nUndefVarError: `latexify` not defined in `Main.Notebook`\nSuggestion: check for spelling errors or missing imports.\nStacktrace:\n [1] top-level scope\n   @ ~/work/PyData2024-AutoDiff/PyData2024-AutoDiff/index.qmd:151\n\n\n\n\nlatexify(Symbolics.derivative(g(xvar), xvar))\n\nUndefVarError: UndefVarError(:latexify, Main.Notebook)\nUndefVarError: `latexify` not defined in `Main.Notebook`\nSuggestion: check for spelling errors or missing imports.\nStacktrace:\n [1] top-level scope\n   @ ~/work/PyData2024-AutoDiff/PyData2024-AutoDiff/index.qmd:163\n\n\n\n\n\n\n\n\n\nDrawback\n\n\nDoes not scale to more complex functions."
+    "text": "Symbolic differentiation\nAsk Mathematica / Wolfram Alpha to work out formulas for you.\n\nusing Symbolics; xvar = Symbolics.variable(:x)\n\n\n\n\nSymbolics.derivative(f(xvar), xvar)\n\nUndefVarError: UndefVarError(:Symbolics, Main.Notebook)\nUndefVarError: `Symbolics` not defined in `Main.Notebook`\nSuggestion: check for spelling errors or missing imports.\nStacktrace:\n [1] top-level scope\n   @ ~/work/PyData2024-AutoDiff/PyData2024-AutoDiff/index.qmd:150\n\n\n\n\nSymbolics.derivative(g(xvar), xvar)\n\nUndefVarError: UndefVarError(:Symbolics, Main.Notebook)\nUndefVarError: `Symbolics` not defined in `Main.Notebook`\nSuggestion: check for spelling errors or missing imports.\nStacktrace:\n [1] top-level scope\n   @ ~/work/PyData2024-AutoDiff/PyData2024-AutoDiff/index.qmd:162\n\n\n\n\n\n\n\n\n\nDrawback\n\n\nDoes not scale to more complex functions."
   },
   {
     "objectID": "index.html#numeric-differentiation",
@@ -81,35 +74,28 @@
     "href": "index.html#python-julia-users",
     "title": "Automatic differentiation",
     "section": "Python & Julia: users",
-    "text": "Python & Julia: users\n\nImage: courtesy of Adrian Hill"
+    "text": "Python & Julia: users\n\n\nImage: courtesy of Adrian Hill"
   },
   {
     "objectID": "index.html#python-julia-developers",
     "href": "index.html#python-julia-developers",
     "title": "Automatic differentiation",
     "section": "Python & Julia: developers",
-    "text": "Python & Julia: developers\n\nImage: courtesy of Adrian Hill"
+    "text": "Python & Julia: developers\n\n\nImage: courtesy of Adrian Hill"
   },
   {
     "objectID": "index.html#why-the-difference",
     "href": "index.html#why-the-difference",
     "title": "Automatic differentiation",
     "section": "Why the difference?",
-    "text": "Why the difference?\nBecause of the relation between tensor operations and AD:\n\nIn Python, tensors are tied to an AD framework\nIn Julia, tensors are part of the core language\n\n\n\nThe good\nNo need to write 3 versions of every scientific library.\n\nThe bad\nJulia AD backends support different subsets of the language."
+    "text": "Why the difference?\n\n\n\n\n\n\n\n\n\nPython\nJulia\n\n\n\n\nMath & tensors\nFramework-specific\nPart of the core language\n\n\nAD development\nCentralized (x3)\nDecentralized\n\n\nLimits of AD\n✅ Well-defined\n❌ Fuzzy\n\n\nScientific libraries\n❌ Split effort\n✅ Shared effort\n\n\n\n\n\n\n\n\n\nDoes it have to be this way?\n\n\nAD could be a language feature instead of a post-hoc addition."
   },
   {
-    "objectID": "index.html#the-importance-of-interfaces",
-    "href": "index.html#the-importance-of-interfaces",
+    "objectID": "index.html#interfaces-for-experimenting",
+    "href": "index.html#interfaces-for-experimenting",
     "title": "Automatic differentiation",
-    "section": "The importance of interfaces",
-    "text": "The importance of interfaces\nAllow easy experimentation with different AD frameworks.\n\n\nPython\nKeras 3.0 supports Tensorflow, PyTorch and JAX.\n\nJulia\nDifferentiationInterface.jl offers a common syntax."
-  },
-  {
-    "objectID": "index.html#going-further",
-    "href": "index.html#going-further",
-    "title": "Automatic differentiation",
-    "section": "Going further",
-    "text": "Going further\n\nAD through a simple function\nAD through a differential equation (Sapienza et al. 2024)\nAD through a stochastic expectation (Mohamed et al. 2020)\nAD through a convex optimizer (Blondel et al. 2022)\nAD through a discrete optimizer (Mandi et al. 2024)"
+    "section": "Interfaces for experimenting",
+    "text": "Interfaces for experimenting\n\n\nKeras now supports Tensorflow, PyTorch and JAX.\n\n\nImage: from Keras 3.0 blog post\n\n\nDifferentiationInterface.jl talks to all Julia AD backends."
   },
   {
     "objectID": "index.html#take-home-message",
@@ -117,6 +103,20 @@
     "title": "Automatic differentiation",
     "section": "Take-home message",
     "text": "Take-home message\nComputing derivatives is automatic and efficient.\nEach AD system comes with limitations.\nLearn to recognize and overcome them."
+  },
+  {
+    "objectID": "index.html#bibliography",
+    "href": "index.html#bibliography",
+    "title": "Automatic differentiation",
+    "section": "Bibliography",
+    "text": "Bibliography\n\nBlondel and Roulet (2024): the most recent book\nGriewank and Walther (2008): the bible of the field\nBaydin et al. (2018), Margossian (2019): concise surveys"
+  },
+  {
+    "objectID": "index.html#going-further",
+    "href": "index.html#going-further",
+    "title": "Automatic differentiation",
+    "section": "Going further",
+    "text": "Going further\n\nAD through a simple function\nAD through a differential equation (Sapienza et al. 2024)\nAD through a stochastic expectation (Mohamed et al. 2020)\nAD through a convex optimizer (Blondel et al. 2022)\nAD through a discrete optimizer (Mandi et al. 2024)"
   },
   {
     "objectID": "index.html#references",

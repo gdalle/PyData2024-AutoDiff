@@ -287,14 +287,6 @@ Guillaume Dalle <a href="https://orcid.org/0000-0003-4866-1687" class="quarto-ti
 </div>
 </div>
 </div>
-</section>
-<section id="bibliography" class="slide level2">
-<h2>Bibliography</h2>
-<ul>
-<li><span class="citation" data-cites="blondelElementsDifferentiableProgramming2024">Blondel and Roulet (<a href="#/references" role="doc-biblioref" onclick="">2024</a>)</span>: the most recent book</li>
-<li><span class="citation" data-cites="griewankEvaluatingDerivativesPrinciples2008">Griewank and Walther (<a href="#/references" role="doc-biblioref" onclick="">2008</a>)</span>: the bible of the field</li>
-<li><span class="citation" data-cites="baydinAutomaticDifferentiationMachine2018">Baydin et al. (<a href="#/references" role="doc-biblioref" onclick="">2018</a>)</span>, <span class="citation" data-cites="margossianReviewAutomaticDifferentiation2019">Margossian (<a href="#/references" role="doc-biblioref" onclick="">2019</a>)</span>: concise surveys</li>
-</ul>
 </section></section>
 <section>
 <section id="flavors-of-differentiation" class="title-slide slide level1 center">
@@ -329,16 +321,24 @@ Guillaume Dalle <a href="https://orcid.org/0000-0003-4866-1687" class="quarto-ti
 </div>
 </div><div class="column" style="width:50%;">
 <div id="4" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fl">2.0</span></span>
-<span id="cb2-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>(x), <span class="fu">g</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>(1.4142135623730951, 1.4142156862745097)</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">df</span>(x) <span class="op">=</span> <span class="fl">1</span> <span class="op">/</span> <span class="fl">2</span>√x</span>
+<span id="cb2-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">dg</span>(x) <span class="op">=</span> <span class="pp">@info</span> <span class="st">"I'm too lazy"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="6" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">df</span>(x) <span class="op">=</span> <span class="fl">1</span> <span class="op">/</span> <span class="fl">2</span>√x</span>
-<span id="cb4-2"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a aria-hidden="true" tabindex="-1"></a><span class="fu">dg</span>(x) <span class="op">=</span> <span class="fu">error</span>(<span class="st">"I'm too lazy"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="fl">2.0</span></span>
+<span id="cb3-2"><a aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>(x), <span class="fu">df</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>(1.4142135623730951, 0.35355339059327373)</code></pre>
+</div>
+</div>
+<div id="8" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">g</span>(x), <span class="fu">dg</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[ Info: I'm too lazy</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>(1.4142156862745097, nothing)</code></pre>
+</div>
 </div>
 </div></div>
 <div class="callout callout-warning callout-titled callout-style-default">
@@ -358,32 +358,32 @@ Guillaume Dalle <a href="https://orcid.org/0000-0003-4866-1687" class="quarto-ti
 <section id="symbolic-differentiation" class="slide level2">
 <h2>Symbolic differentiation</h2>
 <p>Ask Mathematica / Wolfram Alpha to work out formulas for you.</p>
-<div id="8" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Symbolics</span>, <span class="bu">Latexify;</span> xvar = Symbolics.variable(:x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="10" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Symbolics;</span> xvar = Symbolics.variable(:x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="columns">
 <div class="column" style="width:50%;">
-<div id="10" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">latexify</span>(Symbolics.<span class="fu">derivative</span>(<span class="fu">f</span>(xvar), xvar))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="12" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a aria-hidden="true" tabindex="-1"></a>Symbolics.<span class="fu">derivative</span>(<span class="fu">f</span>(xvar), xvar)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
-<pre><code>UndefVarError: UndefVarError(:latexify, Main.Notebook)
-UndefVarError: `latexify` not defined in `Main.Notebook`
+<pre><code>UndefVarError: UndefVarError(:Symbolics, Main.Notebook)
+UndefVarError: `Symbolics` not defined in `Main.Notebook`
 Suggestion: check for spelling errors or missing imports.
 Stacktrace:
  [1] top-level scope
-   @ ~/work/PyData2024-AutoDiff/PyData2024-AutoDiff/index.qmd:151</code></pre>
+   @ ~/work/PyData2024-AutoDiff/PyData2024-AutoDiff/index.qmd:150</code></pre>
 </div>
 </div>
 </div><div class="column" style="width:50%;">
-<div id="12" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">latexify</span>(Symbolics.<span class="fu">derivative</span>(<span class="fu">g</span>(xvar), xvar))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="14" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a aria-hidden="true" tabindex="-1"></a>Symbolics.<span class="fu">derivative</span>(<span class="fu">g</span>(xvar), xvar)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
-<pre><code>UndefVarError: UndefVarError(:latexify, Main.Notebook)
-UndefVarError: `latexify` not defined in `Main.Notebook`
+<pre><code>UndefVarError: UndefVarError(:Symbolics, Main.Notebook)
+UndefVarError: `Symbolics` not defined in `Main.Notebook`
 Suggestion: check for spelling errors or missing imports.
 Stacktrace:
  [1] top-level scope
-   @ ~/work/PyData2024-AutoDiff/PyData2024-AutoDiff/index.qmd:163</code></pre>
+   @ ~/work/PyData2024-AutoDiff/PyData2024-AutoDiff/index.qmd:162</code></pre>
 </div>
 </div>
 </div></div>
@@ -407,25 +407,25 @@ Stacktrace:
 <p><span class="math display">\[\partial f(x)[\varepsilon] \approx \frac{f(x + \varepsilon) - f(x)}{\varepsilon}\]</span></p>
 <div class="columns">
 <div class="column" style="width:33%;">
-<div id="14" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a aria-hidden="true" tabindex="-1"></a>ε<span class="fl">1</span> <span class="op">=</span> <span class="fl">1e-1</span>  <span class="co"># too large</span></span>
-<span id="cb10-2"><a aria-hidden="true" tabindex="-1"></a>(<span class="fu">f</span>(x <span class="op">+</span> ε<span class="fl">1</span>) <span class="op">-</span> <span class="fu">f</span>(x)) <span class="op">/</span> ε<span class="fl">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="16" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a aria-hidden="true" tabindex="-1"></a>ε<span class="fl">1</span> <span class="op">=</span> <span class="fl">1e-1</span>  <span class="co"># too large</span></span>
+<span id="cb13-2"><a aria-hidden="true" tabindex="-1"></a>(<span class="fu">f</span>(x <span class="op">+</span> ε<span class="fl">1</span>) <span class="op">-</span> <span class="fu">f</span>(x)) <span class="op">/</span> ε<span class="fl">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>0.34924112245848793</code></pre>
 </div>
 </div>
 </div><div class="column" style="width:33%;">
-<div id="16" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a aria-hidden="true" tabindex="-1"></a>ε<span class="fl">2</span> <span class="op">=</span> <span class="fl">1e-5</span>  <span class="co"># just right</span></span>
-<span id="cb12-2"><a aria-hidden="true" tabindex="-1"></a>(<span class="fu">f</span>(x <span class="op">+</span> ε<span class="fl">2</span>) <span class="op">-</span> <span class="fu">f</span>(x)) <span class="op">/</span> ε<span class="fl">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="18" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a aria-hidden="true" tabindex="-1"></a>ε<span class="fl">2</span> <span class="op">=</span> <span class="fl">1e-5</span>  <span class="co"># just right</span></span>
+<span id="cb15-2"><a aria-hidden="true" tabindex="-1"></a>(<span class="fu">f</span>(x <span class="op">+</span> ε<span class="fl">2</span>) <span class="op">-</span> <span class="fu">f</span>(x)) <span class="op">/</span> ε<span class="fl">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>0.35355294865091474</code></pre>
 </div>
 </div>
 </div><div class="column" style="width:33%;">
-<div id="18" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a aria-hidden="true" tabindex="-1"></a>ε<span class="fl">3</span> <span class="op">=</span> <span class="fl">1e-15</span>  <span class="co"># too small</span></span>
-<span id="cb14-2"><a aria-hidden="true" tabindex="-1"></a>(<span class="fu">f</span>(x <span class="op">+</span> ε<span class="fl">3</span>) <span class="op">-</span> <span class="fu">f</span>(x)) <span class="op">/</span> ε<span class="fl">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="20" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a aria-hidden="true" tabindex="-1"></a>ε<span class="fl">3</span> <span class="op">=</span> <span class="fl">1e-15</span>  <span class="co"># too small</span></span>
+<span id="cb17-2"><a aria-hidden="true" tabindex="-1"></a>(<span class="fu">f</span>(x <span class="op">+</span> ε<span class="fl">3</span>) <span class="op">-</span> <span class="fu">f</span>(x)) <span class="op">/</span> ε<span class="fl">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>0.22204460492503128</code></pre>
 </div>
@@ -450,26 +450,26 @@ Stacktrace:
 <p>Reinterpret the program computing <span class="math inline">\(f\)</span> to obtain <span class="math inline">\(\partial f(x)\)</span> instead.</p>
 <div class="columns">
 <div class="column" style="width:65%;">
-<div id="20" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> Dual</span>
-<span id="cb16-2"><a aria-hidden="true" tabindex="-1"></a>  val<span class="op">::</span><span class="dt">Float64</span></span>
-<span id="cb16-3"><a aria-hidden="true" tabindex="-1"></a>  der<span class="op">::</span><span class="dt">Float64</span></span>
-<span id="cb16-4"><a aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb16-5"><a aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="op">:</span><span class="fu">*</span>(a, x<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(a<span class="op">*</span>x.val, a<span class="op">*</span>x.der)</span>
-<span id="cb16-7"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="op">:</span><span class="fu">+</span>(x<span class="op">::</span><span class="dt">Dual</span>, y<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(x.val<span class="op">+</span>y.val, x.der<span class="op">+</span>y.der)</span>
-<span id="cb16-8"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="op">:/</span>(x<span class="op">::</span><span class="dt">Dual</span>, y<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(x.val<span class="op">/</span>y.val, (x.der<span class="op">*</span>y.val<span class="op">-</span>y.der<span class="op">*</span>x.val)<span class="op">/</span>y.val<span class="op">^</span><span class="fl">2</span>)</span>
-<span id="cb16-9"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="fu">sqrt</span>(x<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(√x.val, x.der<span class="op">/</span><span class="fl">2</span>√x.val)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="22" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> Dual</span>
+<span id="cb19-2"><a aria-hidden="true" tabindex="-1"></a>  val<span class="op">::</span><span class="dt">Float64</span></span>
+<span id="cb19-3"><a aria-hidden="true" tabindex="-1"></a>  der<span class="op">::</span><span class="dt">Float64</span></span>
+<span id="cb19-4"><a aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb19-5"><a aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="op">:</span><span class="fu">*</span>(a, x<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(a<span class="op">*</span>x.val, a<span class="op">*</span>x.der)</span>
+<span id="cb19-7"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="op">:</span><span class="fu">+</span>(x<span class="op">::</span><span class="dt">Dual</span>, y<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(x.val<span class="op">+</span>y.val, x.der<span class="op">+</span>y.der)</span>
+<span id="cb19-8"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="op">:/</span>(x<span class="op">::</span><span class="dt">Dual</span>, y<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(x.val<span class="op">/</span>y.val, (x.der<span class="op">*</span>y.val<span class="op">-</span>y.der<span class="op">*</span>x.val)<span class="op">/</span>y.val<span class="op">^</span><span class="fl">2</span>)</span>
+<span id="cb19-9"><a aria-hidden="true" tabindex="-1"></a><span class="bu">Base</span>.<span class="fu">sqrt</span>(x<span class="op">::</span><span class="dt">Dual</span>) <span class="op">=</span> <span class="fu">Dual</span>(√x.val, x.der<span class="op">/</span><span class="fl">2</span>√x.val)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div><div class="column" style="width:35%;">
-<div id="22" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>(<span class="fu">Dual</span>(<span class="fl">2.0</span>, <span class="fl">1.0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="24" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">f</span>(<span class="fu">Dual</span>(<span class="fl">2.0</span>, <span class="fl">1.0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>Dual(1.4142135623730951, 0.35355339059327373)</code></pre>
 </div>
 </div>
-<div id="24" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">g</span>(<span class="fu">Dual</span>(<span class="fl">2.0</span>, <span class="fl">1.0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="26" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a aria-hidden="true" tabindex="-1"></a><span class="fu">g</span>(<span class="fu">Dual</span>(<span class="fl">2.0</span>, <span class="fl">1.0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>Dual(1.4142156862745097, 0.35356593617839294)</code></pre>
 </div>
@@ -611,45 +611,101 @@ Stacktrace:
 <section id="python-julia-users" class="slide level2 smaller">
 <h2>Python &amp; Julia: users</h2>
 
-<img data-src="img/python_julia_user.png" class="r-stretch"><p>Image: courtesy of Adrian Hill</p>
+<img data-src="img/python_julia_user.png" class="r-stretch"><div style="font-size: 50%;">
+<p>Image: courtesy of Adrian Hill</p>
+</div>
 </section>
 <section id="python-julia-developers" class="slide level2 smaller">
 <h2>Python &amp; Julia: developers</h2>
 
-<img data-src="img/python_julia_dev.png" class="r-stretch"><p>Image: courtesy of Adrian Hill</p>
+<img data-src="img/python_julia_dev.png" class="r-stretch"><div style="font-size: 50%;">
+<p>Image: courtesy of Adrian Hill</p>
+</div>
 </section>
 <section id="why-the-difference" class="slide level2">
 <h2>Why the difference?</h2>
-<p>Because of the relation between tensor operations and AD:</p>
-<ul>
-<li>In Python, tensors are tied to an AD framework</li>
-<li>In Julia, tensors are part of the core language</li>
-</ul>
-<div class="columns">
-<div class="column" style="width:50%;">
-<p><strong>The good</strong></p>
-<p>No need to write 3 versions of every scientific library.</p>
-</div><div class="column" style="width:50%;">
-<p><strong>The bad</strong></p>
-<p>Julia AD backends support different subsets of the language.</p>
-</div></div>
+<table class="caption-top">
+<colgroup>
+<col style="width: 40%">
+<col style="width: 27%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: left;">Python</th>
+<th style="text-align: left;">Julia</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Math &amp; tensors</td>
+<td style="text-align: left;">Framework-specific</td>
+<td style="text-align: left;">Part of the core language</td>
+</tr>
+<tr class="even">
+<td>AD development</td>
+<td style="text-align: left;">Centralized (x3)</td>
+<td style="text-align: left;">Decentralized</td>
+</tr>
+<tr class="odd">
+<td>Limits of AD</td>
+<td style="text-align: left;"><span class="emoji" data-emoji="white_check_mark">✅</span> Well-defined</td>
+<td style="text-align: left;"><span class="emoji" data-emoji="x">❌</span> Fuzzy</td>
+</tr>
+<tr class="even">
+<td>Scientific libraries</td>
+<td style="text-align: left;"><span class="emoji" data-emoji="x">❌</span> Split effort</td>
+<td style="text-align: left;"><span class="emoji" data-emoji="white_check_mark">✅</span> Shared effort</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Does it have to be this way?</strong></p>
+</div>
+<div class="callout-content">
+<p>AD could be a language feature instead of a post-hoc addition.</p>
+</div>
+</div>
+</div>
 </section>
-<section id="the-importance-of-interfaces" class="slide level2">
-<h2>The importance of interfaces</h2>
-<p>Allow easy experimentation with different AD frameworks.</p>
+<section id="interfaces-for-experimenting" class="slide level2">
+<h2>Interfaces for experimenting</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p><strong>Python</strong></p>
-<p><a href="https://keras.io/">Keras</a> 3.0 supports Tensorflow, PyTorch and JAX.</p>
+<p><a href="https://keras.io/">Keras</a> now supports Tensorflow, PyTorch and JAX.</p>
+<p><img data-src="img/keras.jpg" width="600"></p>
+<div style="font-size: 50%;">
+<p>Image: from Keras 3.0 <a href="https://keras.io/keras_3/">blog post</a></p>
+</div>
 </div><div class="column" style="width:50%;">
-<p><strong>Julia</strong></p>
-<p><a href="https://github.com/JuliaDiff/DifferentiationInterface.jl">DifferentiationInterface.jl</a> offers a common syntax.</p>
+<p><a href="https://github.com/JuliaDiff/DifferentiationInterface.jl">DifferentiationInterface.jl</a> talks to all Julia AD backends.</p>
+<p><img data-src="img/di.svg" width="300"></p>
 </div></div>
 </section></section>
 <section>
 <section id="conclusion" class="title-slide slide level1 center">
 <h1>Conclusion</h1>
 
+</section>
+<section id="take-home-message" class="slide level2">
+<h2>Take-home message</h2>
+<p>Computing derivatives is <strong>automatic</strong> and <strong>efficient</strong>.</p>
+<p>Each AD system comes with <strong>limitations</strong>.</p>
+<p>Learn to recognize and overcome them.</p>
+</section>
+<section id="bibliography" class="slide level2">
+<h2>Bibliography</h2>
+<ul>
+<li><span class="citation" data-cites="blondelElementsDifferentiableProgramming2024">Blondel and Roulet (<a href="#/references" role="doc-biblioref" onclick="">2024</a>)</span>: the most recent book</li>
+<li><span class="citation" data-cites="griewankEvaluatingDerivativesPrinciples2008">Griewank and Walther (<a href="#/references" role="doc-biblioref" onclick="">2008</a>)</span>: the bible of the field</li>
+<li><span class="citation" data-cites="baydinAutomaticDifferentiationMachine2018">Baydin et al. (<a href="#/references" role="doc-biblioref" onclick="">2018</a>)</span>, <span class="citation" data-cites="margossianReviewAutomaticDifferentiation2019">Margossian (<a href="#/references" role="doc-biblioref" onclick="">2019</a>)</span>: concise surveys</li>
+</ul>
 </section>
 <section id="going-further" class="slide level2">
 <h2>Going further</h2>
@@ -660,12 +716,6 @@ Stacktrace:
 <li><label><input type="checkbox">AD through a convex optimizer <span class="citation" data-cites="blondelEfficientModularImplicit2022">(<a href="#/references" role="doc-biblioref" onclick="">Blondel et al. 2022</a>)</span></label></li>
 <li><label><input type="checkbox">AD through a discrete optimizer <span class="citation" data-cites="mandiDecisionFocusedLearningFoundations2024">(<a href="#/references" role="doc-biblioref" onclick="">Mandi et al. 2024</a>)</span></label></li>
 </ul>
-</section>
-<section id="take-home-message" class="slide level2">
-<h2>Take-home message</h2>
-<p>Computing derivatives is <strong>automatic</strong> and <strong>efficient</strong>.</p>
-<p>Each AD system comes with <strong>limitations</strong>.</p>
-<p>Learn to recognize and overcome them.</p>
 </section>
 <section id="references" class="slide level2 smaller scrollable">
 <h2>References</h2>
