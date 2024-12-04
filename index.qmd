@@ -122,7 +122,7 @@ Ask Mathematica / Wolfram Alpha to work out formulas for you.
 
 ```{julia}
 #| output: false
-using Symbolics; xvar = Symbolics.variable(:x)
+using Symbolics, Latexify; xvar = Symbolics.variable(:x)
 ```
 
 :::: {.columns}
@@ -130,7 +130,7 @@ using Symbolics; xvar = Symbolics.variable(:x)
 ::: {.column width="50%"}
 
 ```{julia}
-Symbolics.derivative(f(xvar), xvar)
+latexify(Symbolics.derivative(f(xvar), xvar))
 ```
 
 :::
@@ -138,7 +138,7 @@ Symbolics.derivative(f(xvar), xvar)
 ::: {.column width="50%"}
 
 ```{julia}
-Symbolics.derivative(g(xvar), xvar)
+latexify(Symbolics.derivative(g(xvar), xvar))
 ```
 
 :::
