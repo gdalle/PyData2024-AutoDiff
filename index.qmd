@@ -432,6 +432,12 @@ Each AD system comes with **limitations**.
 
 Learn to recognize and overcome them.
 
+::: {.callout-note}
+## Do you have a tricky AD problem?
+
+Reach out to me, let's figure it out! My website: [gdalle.github.io](https://gdalle.github.io/)
+:::
+
 ## Bibliography
 
 - @blondelElementsDifferentiableProgramming2024: the most recent book
